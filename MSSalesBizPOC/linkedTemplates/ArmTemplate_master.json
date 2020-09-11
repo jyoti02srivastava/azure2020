@@ -1,0 +1,323 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "MSSalesBizPOC"
+		},
+		"cglhlinkedservice_Source_Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservice_Source_Blob'"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AZ_CGLHDB_LinkedService_connectionString": {
+						"value": "[parameters('AZ_CGLHDB_LinkedService_connectionString')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"AzureBlobStorage2_connectionString": {
+						"value": "[parameters('AzureBlobStorage2_connectionString')]"
+					},
+					"AzureBlobStorage_csvtosql_connectionString": {
+						"value": "[parameters('AzureBlobStorage_csvtosql_connectionString')]"
+					},
+					"AzureBlobStorage_pre_connectionString": {
+						"value": "[parameters('AzureBlobStorage_pre_connectionString')]"
+					},
+					"AzureDatabricks1_accessToken": {
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
+					"AzureSourceBlob_accountKey": {
+						"value": "[parameters('AzureSourceBlob_accountKey')]"
+					},
+					"AzureSqlDatabase_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_connectionString')]"
+					},
+					"AzureSqlDatabase_csvtosql_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_csvtosql_connectionString')]"
+					},
+					"AzureSqlDatabase_forBlobdump_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_forBlobdump_connectionString')]"
+					},
+					"AzureSqlDumpDB_LS_connectionString": {
+						"value": "[parameters('AzureSqlDumpDB_LS_connectionString')]"
+					},
+					"az_meta_csv_linkedService_connectionString": {
+						"value": "[parameters('az_meta_csv_linkedService_connectionString')]"
+					},
+					"az_sql_connectionString": {
+						"value": "[parameters('az_sql_connectionString')]"
+					},
+					"blob_pre_connectionString": {
+						"value": "[parameters('blob_pre_connectionString')]"
+					},
+					"cglhADFtoDatabricks_accessToken": {
+						"value": "[parameters('cglhADFtoDatabricks_accessToken')]"
+					},
+					"cglhSourceLocation_connectionString": {
+						"value": "[parameters('cglhSourceLocation_connectionString')]"
+					},
+					"cglhTargetLocation_connectionString": {
+						"value": "[parameters('cglhTargetLocation_connectionString')]"
+					},
+					"cglh_adf_to_blob_linkedservice_connectionString": {
+						"value": "[parameters('cglh_adf_to_blob_linkedservice_connectionString')]"
+					},
+					"AzureSourceBlob_properties_typeProperties_url": {
+						"value": "[parameters('AzureSourceBlob_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"cglh_azuresqldatabase_connectionString": {
+						"value": "[parameters('cglh_azuresqldatabase_connectionString')]"
+					},
+					"cglh_src_adf_pipeline_linkedservice_connectionString": {
+						"value": "[parameters('cglh_src_adf_pipeline_linkedservice_connectionString')]"
+					},
+					"cglh_trg_adf_pipeline_linkedservice_connectionString": {
+						"value": "[parameters('cglh_trg_adf_pipeline_linkedservice_connectionString')]"
+					},
+					"cglhlinkedservice_connectionString": {
+						"value": "[parameters('cglhlinkedservice_connectionString')]"
+					},
+					"cglhlinkedservice_SourceBlob_connectionString": {
+						"value": "[parameters('cglhlinkedservice_SourceBlob_connectionString')]"
+					},
+					"cglhlinkedservice_Source_Blob_connectionString": {
+						"value": "[parameters('cglhlinkedservice_Source_Blob_connectionString')]"
+					},
+					"cglhlinkedservice_TargetBlob_connectionString": {
+						"value": "[parameters('cglhlinkedservice_TargetBlob_connectionString')]"
+					},
+					"cglhlinkedservice_Target_BLOB_connectionString": {
+						"value": "[parameters('cglhlinkedservice_Target_BLOB_connectionString')]"
+					},
+					"cglhlinkedservice_json_accessToken": {
+						"value": "[parameters('cglhlinkedservice_json_accessToken')]"
+					},
+					"cglhlinkedservice_json3_accessToken": {
+						"value": "[parameters('cglhlinkedservice_json3_accessToken')]"
+					},
+					"cglhlinkedservicenew_connectionString": {
+						"value": "[parameters('cglhlinkedservicenew_connectionString')]"
+					},
+					"onpremtosql_connectionString": {
+						"value": "[parameters('onpremtosql_connectionString')]"
+					},
+					"prepostdatabricks_linkedservice_accessToken": {
+						"value": "[parameters('prepostdatabricks_linkedservice_accessToken')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureStorageLinkedService_connectionString": {
+						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
+					},
+					"SqlServercglh_connectionString": {
+						"value": "[parameters('SqlServercglh_connectionString')]"
+					},
+					"SqlServercglh_password": {
+						"value": "[parameters('SqlServercglh_password')]"
+					},
+					"cglh_sqlserverpost_connectionString": {
+						"value": "[parameters('cglh_sqlserverpost_connectionString')]"
+					},
+					"cglh_sqlserverpost_password": {
+						"value": "[parameters('cglh_sqlserverpost_password')]"
+					},
+					"SqlServercglh_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServercglh_properties_typeProperties_userName')]"
+					},
+					"cglh_sqlserverpost_properties_typeProperties_userName": {
+						"value": "[parameters('cglh_sqlserverpost_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_4')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_6",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_6.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_5')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_7",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_7.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_6')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_8",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_8.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_7')]"
+			]
+		}
+	]
+}
