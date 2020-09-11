@@ -1,0 +1,223 @@
+{
+	"name": "CopyBlobtoBlobForMultipleInclude",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetAllIncludeFilesthatNeedToBeCopied",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.a1",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "IfConditionToFilterFilestoCopy",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@not(contains(pipeline().parameters.a2,item().name))",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "GetListOfIncludeFiles",
+										"type": "AppendVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "a3",
+											"value": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "SetvariableWithFinalIncludeFileNames",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetAllIncludeFilesthatNeedToBeCopied",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Final",
+					"value": {
+						"value": "@variables('a3')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEachTOCopyOnlySelectedIncludeFiles",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "SetvariableWithFinalIncludeFileNames",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('a3')",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "CopyFilteredFiles",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"wildcardFolderPath": {
+											"value": "@pipeline().parameters.SourceFolder",
+											"type": "Expression"
+										},
+										"wildcardFileName": {
+											"value": "@item()",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "PreserveHierarchy"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ""
+									}
+								},
+								"enableStaging": false,
+								"parallelCopies": 50,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "CGLH_SourceCopyDataWithExcludeFunction",
+									"type": "DatasetReference",
+									"parameters": {
+										"SourcePath": {
+											"value": "@pipeline().parameters.SourcePath",
+											"type": "Expression"
+										},
+										"SourceFolder": {
+											"value": "@pipeline().parameters.SourceFolder",
+											"type": "Expression"
+										},
+										"SourceFile": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "CGLH_TargetExcludeFunction",
+									"type": "DatasetReference",
+									"parameters": {
+										"TargetPath": {
+											"value": "@pipeline().parameters.TargetPath",
+											"type": "Expression"
+										},
+										"TargetFolder": {
+											"value": "@pipeline().parameters.TargetFolder",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"a1": {
+				"type": "array",
+				"defaultValue": []
+			},
+			"a2": {
+				"type": "array",
+				"defaultValue": []
+			},
+			"SourcePath": {
+				"type": "string",
+				"defaultValue": "NULL"
+			},
+			"SourceFolder": {
+				"type": "string",
+				"defaultValue": "NULL"
+			},
+			"TargetPath": {
+				"type": "string",
+				"defaultValue": "NULL"
+			},
+			"TargetFolder": {
+				"type": "string",
+				"defaultValue": "NULL"
+			}
+		},
+		"variables": {
+			"a3": {
+				"type": "Array"
+			},
+			"Final": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-09-01T05:47:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,115 @@
+{
+	"name": "LoadBlobToTable_withMetaOption",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetSqlDetail",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select SourcePath,SourceFolder,SourceFileType,SQLTargetDatabase,SQLTargetUser,SQLTargetPassword,SQLTargetTable from [cglhdatabase].[dbo].[CGConfiguration] \nwhere GroupName='CopyFiles_BLOBtoSQL' and ActiveFlag='y'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzuretoCGLHDBConnection",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetSqlDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetSqlDetail').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "LoadBlobToTable",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/Users/jyoti.srivastava@annik.com/LoadBlobToSql",
+								"baseParameters": {
+									"SourcePath": {
+										"value": "@item().SourcePath",
+										"type": "Expression"
+									},
+									"SourceFolder": {
+										"value": "@item().SourceFolder",
+										"type": "Expression"
+									},
+									"SourceFileType": {
+										"value": "@item().SourceFileType",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "cglhlinkedservice_json",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "LoadBlobToTable",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "DumptoSqlParallel",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-23T18:29:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,30 @@
+{
+	"name": "cglh_pipelinedatabricks",
+	"properties": {
+		"activities": [
+			{
+				"name": "JSON_JSON_comparison",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/princy.raheja@annik.com/JSON_JSON_comparison"
+				},
+				"linkedServiceName": {
+					"referenceName": "prepostdatabricks_linkedservice",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-08-04T12:37:12Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

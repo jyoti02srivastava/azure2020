@@ -1,0 +1,129 @@
+{
+	"name": "cglh_pipelinejsonpost",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_tme",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.Factsalesquotapost"
+					},
+					{
+						"name": "Destination",
+						"value": "cglhcontainerpost/06/08/2020_FactSalesQuota"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SalesQuotaKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['SalesQuotaKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "EmployeeKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['EmployeeKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "DateKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['DateKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "CalendarYear",
+									"type": "Int16"
+								},
+								"sink": {
+									"path": "$['CalendarYear']"
+								}
+							},
+							{
+								"source": {
+									"name": "CalendarQuarter",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['CalendarQuarter']"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesAmountQuota",
+									"type": "Decimal"
+								},
+								"sink": {
+									"path": "$['SalesAmountQuota']"
+								}
+							},
+							{
+								"source": {
+									"name": "Date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"path": "$['Date']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_tme",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_tme",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-08-05T20:42:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

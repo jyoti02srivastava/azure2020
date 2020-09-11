@@ -1,0 +1,13 @@
+{
+	"name": "cglhtable_onpremtoazure",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServercglh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

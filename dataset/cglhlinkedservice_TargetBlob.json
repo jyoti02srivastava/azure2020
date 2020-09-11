@@ -1,0 +1,18 @@
+{
+	"name": "cglhlinkedservice_TargetBlob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservice_Target_BLOB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "clghtarget"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

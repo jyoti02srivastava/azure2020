@@ -1,0 +1,18 @@
+{
+	"name": "DestinationDataset_2ty",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureStorageLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "cglhcontainerpost"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,156 @@
+{
+	"name": "testpipleine",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_1v9",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.DimAccount"
+					},
+					{
+						"name": "Destination",
+						"value": "cglhcontainer//"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "AccountKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['AccountKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "ParentAccountKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['ParentAccountKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountCodeAlternateKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['AccountCodeAlternateKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "ParentAccountCodeAlternateKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['ParentAccountCodeAlternateKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountDescription",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['AccountDescription']"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountType",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['AccountType']"
+								}
+							},
+							{
+								"source": {
+									"name": "Operator",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Operator']"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomMembers",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CustomMembers']"
+								}
+							},
+							{
+								"source": {
+									"name": "ValueType",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['ValueType']"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomMemberOptions",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CustomMemberOptions']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_1v9",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_1v9",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-08-04T11:08:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

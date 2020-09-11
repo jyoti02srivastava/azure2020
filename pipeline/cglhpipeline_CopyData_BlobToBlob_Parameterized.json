@@ -1,0 +1,119 @@
+{
+	"name": "cglhpipeline_CopyData_BlobToBlob_Parameterized",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_DB_METADATA",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select ParamName,ParamChar from [dbo].[Parameters] where ParamName in('copy_blobtoblob_sourcepath','copy_blobtoblob_targetpath','copy_blobtoblob_sourcefile') order by ParamId asc",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "az_sql_table",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Copy data Blob to Blob",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "SQL_DB_METADATA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@activity('SQL_DB_METADATA').output.value[0].ParamChar",
+								"type": "Expression"
+							},
+							"wildcardFileName": {
+								"value": "@activity('SQL_DB_METADATA').output.value[2].ParamChar",
+								"type": "Expression"
+							},
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "az_cglhsrc_path",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "az_chlhtarget_path",
+						"type": "DatasetReference",
+						"parameters": {
+							"TargetPath": {
+								"value": "@activity('SQL_DB_METADATA').output.value[1].ParamChar",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-10T12:31:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,283 @@
+{
+	"name": "CopyFromDifferentBlobWithMultiple_Exclude_Include_File",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetSqlTableDetail",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select a.ParamName,a.SourcePath,a.SourceFolder,a.SourceFileType_New as SourceFileType,a.TargetPath,a.TargetFolder,a.TargetFileType,a.ExcludeFiles\n,a.ActiveFlag, a.Priority from (\nselect ParamName,SourcePath,SourceFolder,SourceFileType,TargetPath,TargetFolder,TargetFileType,ExcludeFiles, ActiveFlag,Priority, CASE \n\t\t\t\tWHEN (SourceFileType is NULL) THEN '*'\n\t\t\t\tELSE SourceFileType\n\t\t\t\tend as SourceFileType_New \n\t\t\t\tfrom [cglhdatabase].[dbo].[CGConfiguration] \nwhere GroupName='CopyFiles' and ActiveFlag = 'Y') a order by Priority",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "For Each Record1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetSqlTableDetail",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetSqlTableDetail').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "If Condition2",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@contains(item().SourceFileType,'*')",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "IncludeFileNames",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "IncludeFileNames",
+											"value": {
+												"value": "@split(item().SourceFileType,',')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "ExecutePipelineforGettingNameOfMultipleInclude",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "IncludeFileNames",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											},
+											{
+												"activity": "GetMetadataOfSourceFolder",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "CopyBlobtoBlobForMultipleInclude",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"a1": {
+													"value": "@array(activity('GetMetadataOfSourceFolder').output.childItems)",
+													"type": "Expression"
+												},
+												"a2": {
+													"value": "@array(variables('IncludeFileNames'))",
+													"type": "Expression"
+												},
+												"SourcePath": {
+													"value": "@item().SourcePath",
+													"type": "Expression"
+												},
+												"SourceFolder": {
+													"value": "@item().SourceFolder",
+													"type": "Expression"
+												},
+												"TargetPath": {
+													"value": "@item().TargetPath",
+													"type": "Expression"
+												},
+												"TargetFolder": {
+													"value": "@item().TargetFolder",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "GetMetadataOfSourceFolder",
+										"type": "GetMetadata",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"dataset": {
+												"referenceName": "GetMetadataOfBlobStorage",
+												"type": "DatasetReference",
+												"parameters": {
+													"SourcePath": {
+														"value": "@item().SourcePath",
+														"type": "Expression"
+													},
+													"SourceFolder": {
+														"value": "@item().SourceFolder",
+														"type": "Expression"
+													}
+												}
+											},
+											"fieldList": [
+												"childItems"
+											],
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "SetVariableForExclueFile",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "ExcludeFiles",
+											"value": {
+												"value": "@item().ExcludeFiles",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Execute Pipeline4",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "SetVariableForExclueFile",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											},
+											{
+												"activity": "SetSourceFileType",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"ExcludeFileNames": {
+													"value": "@variables('ExcludeFiles')",
+													"type": "Expression"
+												},
+												"SourceFileType": {
+													"value": "@variables('SourceFileType')",
+													"type": "Expression"
+												},
+												"SourceFolder": {
+													"value": "@item().SourceFolder",
+													"type": "Expression"
+												},
+												"SourcePath": {
+													"value": "@item().SourcePath",
+													"type": "Expression"
+												},
+												"TargetPath": {
+													"value": "@item().TargetPath",
+													"type": "Expression"
+												},
+												"TargetFolder": {
+													"value": "@item().TargetFolder",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "SetSourceFileType",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "SourceFileType",
+											"value": {
+												"value": "@item().SourceFileType",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"ExcludeFiles": {
+				"type": "String"
+			},
+			"CovertMetaDataToArray": {
+				"type": "Array"
+			},
+			"FileTypeFinal": {
+				"type": "Array"
+			},
+			"SplitExcludeFilesIntoArray": {
+				"type": "Array"
+			},
+			"LoopThroughExcludeFilesVariable": {
+				"type": "Array"
+			},
+			"IncludeFileNames": {
+				"type": "Array",
+				"defaultValue": []
+			},
+			"SourceFileType": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-09-01T10:35:59Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

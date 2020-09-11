@@ -1,0 +1,78 @@
+{
+	"name": "DestinationDataset_8e4",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_csvtosql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Transaction_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Product",
+				"type": "text"
+			},
+			{
+				"name": "Price",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "Payment_Type",
+				"type": "text"
+			},
+			{
+				"name": "Name",
+				"type": "text"
+			},
+			{
+				"name": "City",
+				"type": "text"
+			},
+			{
+				"name": "State",
+				"type": "text"
+			},
+			{
+				"name": "Country",
+				"type": "text"
+			},
+			{
+				"name": "Account_Created",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Last_Login",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Latitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "Longitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "dl_sales"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

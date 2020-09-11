@@ -1,0 +1,135 @@
+{
+	"name": "pipelineWithTwoExecutionPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.SourceFileType,'*')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "ExecutePipelineForCJP",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "ToCopyAllFilesExceptExcludedFilesForCJP",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"a1": {
+										"value": "@pipeline().parameters.a1",
+										"type": "Expression"
+									},
+									"a2": {
+										"value": "@pipeline().parameters.a2",
+										"type": "Expression"
+									},
+									"SourcePath": {
+										"value": "@pipeline().parameters.SourcePath",
+										"type": "Expression"
+									},
+									"SourceFolder": {
+										"value": "@pipeline().parameters.SourceFolder",
+										"type": "Expression"
+									},
+									"TargetPath": {
+										"value": "@pipeline().parameters.TargetPath",
+										"type": "Expression"
+									},
+									"TargetFolder": {
+										"value": "@pipeline().parameters.TargetFolder",
+										"type": "Expression"
+									},
+									"SourceFileType": {
+										"value": "@pipeline().parameters.SourceFileType",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "ExecutePipelineForStartFiles",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "ToCopyAllFilesExceptExcludedFiles",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"a1": {
+										"value": "@pipeline().parameters.a1",
+										"type": "Expression"
+									},
+									"a2": {
+										"value": "@pipeline().parameters.a2",
+										"type": "Expression"
+									},
+									"SourcePath": {
+										"value": "@pipeline().parameters.SourcePath",
+										"type": "Expression"
+									},
+									"SourceFolder": {
+										"value": "@pipeline().parameters.SourceFolder",
+										"type": "Expression"
+									},
+									"TargetPath": {
+										"value": "@pipeline().parameters.TargetPath",
+										"type": "Expression"
+									},
+									"TargetFolder": {
+										"value": "@pipeline().parameters.TargetFolder",
+										"type": "Expression"
+									},
+									"SourceFileType": {
+										"value": "@pipeline().parameters.SourceFileType",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"SourceFileType": {
+				"type": "string"
+			},
+			"a1": {
+				"type": "array"
+			},
+			"a2": {
+				"type": "array"
+			},
+			"SourcePath": {
+				"type": "string"
+			},
+			"SourceFolder": {
+				"type": "string"
+			},
+			"TargetPath": {
+				"type": "string"
+			},
+			"TargetFolder": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-24T17:27:40Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

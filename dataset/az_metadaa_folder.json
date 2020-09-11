@@ -1,0 +1,80 @@
+{
+	"name": "az_metadaa_folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "az_meta_csv_linkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "cglhsrc"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID",
+				"type": "String"
+			},
+			{
+				"name": "Age",
+				"type": "String"
+			},
+			{
+				"name": "Experience",
+				"type": "String"
+			},
+			{
+				"name": "Income",
+				"type": "String"
+			},
+			{
+				"name": "ZIP_Code",
+				"type": "String"
+			},
+			{
+				"name": "Family",
+				"type": "String"
+			},
+			{
+				"name": "CCAvg",
+				"type": "String"
+			},
+			{
+				"name": "Education",
+				"type": "String"
+			},
+			{
+				"name": "Mortgage",
+				"type": "String"
+			},
+			{
+				"name": "Personal_Loan",
+				"type": "String"
+			},
+			{
+				"name": "Securities_Account",
+				"type": "String"
+			},
+			{
+				"name": "CD_Account",
+				"type": "String"
+			},
+			{
+				"name": "Online",
+				"type": "String"
+			},
+			{
+				"name": "CreditCard",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,31 @@
+{
+	"name": "CGLHSourceCSVType",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservice_Source_Blob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SourcePath": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": {
+					"value": "@dataset().SourcePath",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

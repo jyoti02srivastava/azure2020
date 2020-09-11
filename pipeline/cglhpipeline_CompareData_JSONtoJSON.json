@@ -1,0 +1,33 @@
+{
+	"name": "cglhpipeline_CompareData_JSONtoJSON",
+	"properties": {
+		"activities": [
+			{
+				"name": "cglhpipeline_CompareData_JSONtoJSON",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.05:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/jyoti.srivastava@annik.com/Json_Json_Comparision"
+				},
+				"linkedServiceName": {
+					"referenceName": "cglhlinkedservice_json3",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-07T10:26:12Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

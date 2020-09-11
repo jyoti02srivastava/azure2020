@@ -1,0 +1,25 @@
+{
+	"name": "SourceDataset_p2c",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_csvtosql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "FL_insurance_sample.csv",
+				"container": "cglhcontainer"
+			},
+			"columnDelimiter": ",",
+			"rowDelimiter": "\r",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

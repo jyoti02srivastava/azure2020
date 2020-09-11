@@ -1,0 +1,135 @@
+{
+	"name": "ExecutePipelineForEachSourceFolderNames",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachMetaData",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@array(pipeline().parameters.GetMetaDataOfSourceFolder)",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "IfConditionToFilterOutTheExcludedFiles",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@contains(array(pipeline().parameters.ExcludeFileNames),item().name)",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Append variable1",
+										"type": "AppendVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "ListOfFilesAfterFilter",
+											"value": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEachMetaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "ListOfFinalFilestoBeCopied",
+					"value": {
+						"value": "@variables('ListOfFilesAfterFilter')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/jyoti.srivastava@annik.com/rough",
+					"baseParameters": {
+						"abc": {
+							"value": "[\"a\",\"b\",\"c\"]",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "cglhlinkedservice_json",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"GetMetaDataOfSourceFolder": {
+				"type": "array"
+			},
+			"ExcludeFileNames": {
+				"type": "array"
+			},
+			"SourcePath": {
+				"type": "string"
+			},
+			"SourceFolder": {
+				"type": "string"
+			},
+			"SourceFileType": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"ListOfFilesAfterFilter": {
+				"type": "Array",
+				"defaultValue": []
+			},
+			"ListOfFinalFilestoBeCopied": {
+				"type": "Array",
+				"defaultValue": []
+			},
+			"abc": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-25T18:14:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

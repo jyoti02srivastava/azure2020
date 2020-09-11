@@ -1,0 +1,87 @@
+{
+	"name": "az_sql_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Age",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Experience",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "income",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ZIP_Code",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Family",
+				"type": "varchar"
+			},
+			{
+				"name": "CCAvg",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Education",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Mortgage",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Personal_Loan",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Securities_Account",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CD_Account",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Online",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CreditCard",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Parameters"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

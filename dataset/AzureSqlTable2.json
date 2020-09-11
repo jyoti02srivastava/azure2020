@@ -1,0 +1,28 @@
+{
+	"name": "AzureSqlTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservicenew",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DBVersion",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VersionDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "AdventureWorksDWBuildVersion"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

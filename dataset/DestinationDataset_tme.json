@@ -1,0 +1,20 @@
+{
+	"name": "DestinationDataset_tme",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureStorageLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "2020_FactSalesQuota",
+				"folderPath": "06/08",
+				"container": "cglhcontainerpost"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

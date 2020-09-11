@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_p2c",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglh_azuresqldatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "dl_sales"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,20 @@
+{
+	"name": "DestinationDataset_ntp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_pre",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "2020_FactSalesQuota",
+				"folderPath": "05/08",
+				"container": "cglhcontainerpre"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

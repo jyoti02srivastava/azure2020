@@ -1,0 +1,24 @@
+{
+	"name": "DatasetForCGLHTGTSourceFolder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservice_Target_BLOB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "temp_BlobtoSql_Files",
+				"container": "chlhsrc"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

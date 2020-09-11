@@ -1,0 +1,99 @@
+{
+	"name": "insetingdynamicparameterintoproc",
+	"properties": {
+		"activities": [
+			{
+				"name": "insetingdynamicparameterintoProc",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "File_metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sql_metadata_test_proc]",
+					"storedProcedureParameters": {
+						"filename": {
+							"value": {
+								"value": "@activity('File_metadata').output.itemName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"lastmodifieddate": {
+							"value": {
+								"value": "@activity('File_metadata').output.lastModified",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"recordinserteddate": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "az_sql",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "File_metadata",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Az_meta_csv",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"columnCount",
+						"contentMD5",
+						"exists",
+						"itemName",
+						"itemType",
+						"lastModified",
+						"size",
+						"structure"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-02T12:05:06Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

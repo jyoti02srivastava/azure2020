@@ -1,0 +1,16 @@
+{
+	"name": "AzuretoCGLHDBConnection",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_csvtosql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": ""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

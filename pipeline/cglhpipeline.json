@@ -1,0 +1,377 @@
+{
+	"name": "cglhpipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_i8e",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_i8e",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "dbo.@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_i8e",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_i8e",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SalesOrderID"
+								},
+								"sink": {
+									"name": "DBVersion"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "AdventureWorksDWBuildVersion"
+						},
+						"destination": {
+							"table": "AdventureWorksDWBuildVersion"
+						}
+					},
+					{
+						"source": {
+							"table": "DatabaseLog"
+						},
+						"destination": {
+							"table": "DatabaseLog"
+						}
+					},
+					{
+						"source": {
+							"table": "DimAccount"
+						},
+						"destination": {
+							"table": "DimAccount"
+						}
+					},
+					{
+						"source": {
+							"table": "DimCurrency"
+						},
+						"destination": {
+							"table": "DimCurrency"
+						}
+					},
+					{
+						"source": {
+							"table": "DimCustomer"
+						},
+						"destination": {
+							"table": "DimCustomer"
+						}
+					},
+					{
+						"source": {
+							"table": "DimDate"
+						},
+						"destination": {
+							"table": "DimDate"
+						}
+					},
+					{
+						"source": {
+							"table": "DimDepartmentGroup"
+						},
+						"destination": {
+							"table": "DimDepartmentGroup"
+						}
+					},
+					{
+						"source": {
+							"table": "DimEmployee"
+						},
+						"destination": {
+							"table": "DimEmployee"
+						}
+					},
+					{
+						"source": {
+							"table": "DimGeography"
+						},
+						"destination": {
+							"table": "DimGeography"
+						}
+					},
+					{
+						"source": {
+							"table": "DimOrganization"
+						},
+						"destination": {
+							"table": "DimOrganization"
+						}
+					},
+					{
+						"source": {
+							"table": "DimProduct"
+						},
+						"destination": {
+							"table": "DimProduct"
+						}
+					},
+					{
+						"source": {
+							"table": "DimProductCategory"
+						},
+						"destination": {
+							"table": "DimProductCategory"
+						}
+					},
+					{
+						"source": {
+							"table": "DimProductSubcategory"
+						},
+						"destination": {
+							"table": "DimProductSubcategory"
+						}
+					},
+					{
+						"source": {
+							"table": "DimPromotion"
+						},
+						"destination": {
+							"table": "DimPromotion"
+						}
+					},
+					{
+						"source": {
+							"table": "DimReseller"
+						},
+						"destination": {
+							"table": "DimReseller"
+						}
+					},
+					{
+						"source": {
+							"table": "DimSalesReason"
+						},
+						"destination": {
+							"table": "DimSalesReason"
+						}
+					},
+					{
+						"source": {
+							"table": "DimSalesTerritory"
+						},
+						"destination": {
+							"table": "DimSalesTerritory"
+						}
+					},
+					{
+						"source": {
+							"table": "DimScenario"
+						},
+						"destination": {
+							"table": "DimScenario"
+						}
+					},
+					{
+						"source": {
+							"table": "FactAdditionalInternationalProductDescription"
+						},
+						"destination": {
+							"table": "FactAdditionalInternationalProductDescription"
+						}
+					},
+					{
+						"source": {
+							"table": "FactCallCenter"
+						},
+						"destination": {
+							"table": "FactCallCenter"
+						}
+					},
+					{
+						"source": {
+							"table": "FactCurrencyRate"
+						},
+						"destination": {
+							"table": "FactCurrencyRate"
+						}
+					},
+					{
+						"source": {
+							"table": "FactFinance"
+						},
+						"destination": {
+							"table": "FactFinance"
+						}
+					},
+					{
+						"source": {
+							"table": "FactInternetSales"
+						},
+						"destination": {
+							"table": "FactInternetSales"
+						}
+					},
+					{
+						"source": {
+							"table": "FactInternetSalesReason"
+						},
+						"destination": {
+							"table": "FactInternetSalesReason"
+						}
+					},
+					{
+						"source": {
+							"table": "FactProductInventory"
+						},
+						"destination": {
+							"table": "FactProductInventory"
+						}
+					},
+					{
+						"source": {
+							"table": "FactResellerSales"
+						},
+						"destination": {
+							"table": "FactResellerSales"
+						}
+					},
+					{
+						"source": {
+							"table": "FactSalesQuota"
+						},
+						"destination": {
+							"table": "FactSalesQuota"
+						}
+					},
+					{
+						"source": {
+							"table": "FactSurveyResponse"
+						},
+						"destination": {
+							"table": "FactSurveyResponse"
+						}
+					},
+					{
+						"source": {
+							"table": "NewFactCurrencyRate"
+						},
+						"destination": {
+							"table": "NewFactCurrencyRate"
+						}
+					},
+					{
+						"source": {
+							"table": "ProspectiveBuyer"
+						},
+						"destination": {
+							"table": "ProspectiveBuyer"
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-07-28T07:23:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

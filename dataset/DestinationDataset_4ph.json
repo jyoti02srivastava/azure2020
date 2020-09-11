@@ -1,0 +1,18 @@
+{
+	"name": "DestinationDataset_4ph",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhTargetLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "clghtarget"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

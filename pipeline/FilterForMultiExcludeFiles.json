@@ -1,0 +1,51 @@
+{
+	"name": "FilterForMultiExcludeFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.MultiExcludeFile",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "FilterActivityInsideForEach",
+							"type": "Filter",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@pipeline().parameters.GetMetaDataDetail",
+									"type": "Expression"
+								},
+								"condition": {
+									"value": "@not(contains(item().name,'sample_json1.json'))",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"GetMetaDataDetail": {
+				"type": "array"
+			},
+			"MultiExcludeFile": {
+				"type": "array"
+			}
+		},
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-18T07:04:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

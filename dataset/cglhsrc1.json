@@ -1,0 +1,26 @@
+{
+	"name": "cglhsrc1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservice_Source_Blob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"EnterSourcePath": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": {
+					"value": "@dataset().EnterSourcePath",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

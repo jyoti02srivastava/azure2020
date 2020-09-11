@@ -1,0 +1,327 @@
+{
+	"name": "copysqltoblob",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_2lq",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.DimCustomer"
+					},
+					{
+						"name": "Destination",
+						"value": "cglhcontainerpre//"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CustomerKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['CustomerKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "GeographyKey",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['GeographyKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerAlternateKey",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CustomerAlternateKey']"
+								}
+							},
+							{
+								"source": {
+									"name": "Title",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Title']"
+								}
+							},
+							{
+								"source": {
+									"name": "FirstName",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['FirstName']"
+								}
+							},
+							{
+								"source": {
+									"name": "MiddleName",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['MiddleName']"
+								}
+							},
+							{
+								"source": {
+									"name": "AddressLine1",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['AddressLine1']"
+								}
+							},
+							{
+								"source": {
+									"name": "AddressLine2",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['AddressLine2']"
+								}
+							},
+							{
+								"source": {
+									"name": "Phone",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Phone']"
+								}
+							},
+							{
+								"source": {
+									"name": "DateFirstPurchase",
+									"type": "DateTime"
+								},
+								"sink": {
+									"path": "$['DateFirstPurchase']"
+								}
+							},
+							{
+								"source": {
+									"name": "CommuteDistance",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CommuteDistance']"
+								}
+							},
+							{
+								"source": {
+									"name": "FrenchEducation",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['FrenchEducation']"
+								}
+							},
+							{
+								"source": {
+									"name": "EnglishOccupation",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['EnglishOccupation']"
+								}
+							},
+							{
+								"source": {
+									"name": "SpanishOccupation",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['SpanishOccupation']"
+								}
+							},
+							{
+								"source": {
+									"name": "FrenchOccupation",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['FrenchOccupation']"
+								}
+							},
+							{
+								"source": {
+									"name": "HouseOwnerFlag",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['HouseOwnerFlag']"
+								}
+							},
+							{
+								"source": {
+									"name": "NumberCarsOwned",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['NumberCarsOwned']"
+								}
+							},
+							{
+								"source": {
+									"name": "EmailAddress",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['EmailAddress']"
+								}
+							},
+							{
+								"source": {
+									"name": "YearlyIncome",
+									"type": "Decimal"
+								},
+								"sink": {
+									"path": "$['YearlyIncome']"
+								}
+							},
+							{
+								"source": {
+									"name": "TotalChildren",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['TotalChildren']"
+								}
+							},
+							{
+								"source": {
+									"name": "NumberChildrenAtHome",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['NumberChildrenAtHome']"
+								}
+							},
+							{
+								"source": {
+									"name": "EnglishEducation",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['EnglishEducation']"
+								}
+							},
+							{
+								"source": {
+									"name": "SpanishEducation",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['SpanishEducation']"
+								}
+							},
+							{
+								"source": {
+									"name": "LastName",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['LastName']"
+								}
+							},
+							{
+								"source": {
+									"name": "NameStyle",
+									"type": "Boolean"
+								},
+								"sink": {
+									"path": "$['NameStyle']"
+								}
+							},
+							{
+								"source": {
+									"name": "BirthDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"path": "$['BirthDate']"
+								}
+							},
+							{
+								"source": {
+									"name": "MaritalStatus",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['MaritalStatus']"
+								}
+							},
+							{
+								"source": {
+									"name": "Suffix",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Suffix']"
+								}
+							},
+							{
+								"source": {
+									"name": "Gender",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Gender']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_2lq",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_2lq",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-08-18T19:01:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

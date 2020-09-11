@@ -1,0 +1,17 @@
+{
+	"name": "cglh_sqlserverpost",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=LIN46000349;initial catalog=AdventureworksDW2019",
+			"userName": "fareast\\v-prrahe",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2MjIyZDcxYy0zNzNjLTQ0YWUtOWFiZi1lZGE3NjEwN2M2YWYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "TutorialIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

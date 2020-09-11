@@ -1,0 +1,108 @@
+{
+	"name": "SourceDataset_d1w",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglh_adf_to_blob_linkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "cglhsrc"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"$schema": {
+					"type": "string"
+				},
+				"contentVersion": {
+					"type": "string"
+				},
+				"parameters": {
+					"type": "object",
+					"properties": {
+						"servers_cgpocdbserverdbrscala_name": {
+							"type": "object",
+							"properties": {
+								"defaultValue": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"variables": {
+					"type": "object"
+				},
+				"resources": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string"
+							},
+							"apiVersion": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"location": {
+								"type": "string"
+							},
+							"sku": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"tier": {
+										"type": "string"
+									},
+									"capacity": {
+										"type": "integer"
+									}
+								}
+							},
+							"kind": {
+								"type": "string"
+							},
+							"properties": {
+								"type": "object",
+								"properties": {
+									"collation": {
+										"type": "string"
+									},
+									"maxSizeBytes": {
+										"type": "integer"
+									},
+									"catalogCollation": {
+										"type": "string"
+									},
+									"readScale": {
+										"type": "string"
+									},
+									"readReplicaCount": {
+										"type": "integer"
+									},
+									"storageAccountType": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

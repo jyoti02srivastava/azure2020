@@ -1,0 +1,21 @@
+{
+	"name": "ParquetDataSetForCGLHSRCSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservice_Source_Blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "2020/ParquetToLoadInSQLTable_v1",
+				"container": "cglhsrc"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,45 @@
+{
+	"name": "SourceDataset_1vt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "dbo.FactSalesQuota.json",
+				"container": "cglhcontainer"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"SalesQuotaKey": {
+					"type": "integer"
+				},
+				"EmployeeKey": {
+					"type": "integer"
+				},
+				"DateKey": {
+					"type": "integer"
+				},
+				"CalendarYear": {
+					"type": "integer"
+				},
+				"CalendarQuarter": {
+					"type": "integer"
+				},
+				"SalesAmountQuota": {
+					"type": "number"
+				},
+				"Date": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,78 @@
+{
+	"name": "SourceDataset_1v9",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServercglh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "AccountKey",
+				"type": "int",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "ParentAccountKey",
+				"type": "int",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "AccountCodeAlternateKey",
+				"type": "int",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "ParentAccountCodeAlternateKey",
+				"type": "int",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "AccountDescription",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "AccountType",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "Operator",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "CustomMembers",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "ValueType",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "CustomMemberOptions",
+				"type": "nvarchar",
+				"precision": 0,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DimAccount"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

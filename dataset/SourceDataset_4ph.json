@@ -1,0 +1,19 @@
+{
+	"name": "SourceDataset_4ph",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhSourceLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "2020",
+				"container": "cglhcontainer"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

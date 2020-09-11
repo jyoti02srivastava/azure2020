@@ -1,0 +1,54 @@
+{
+	"name": "SetVariable",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.names",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "name",
+								"value": {
+									"value": "@item()",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"names": {
+				"type": "array",
+				"defaultValue": [
+					"jyoti",
+					"srivastva"
+				]
+			}
+		},
+		"variables": {
+			"name": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Jyoti_Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-10T12:31:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,37 @@
+{
+	"name": "cglhttgt1_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cglhlinkedservice_Source_Blob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"EnterTargetPath": {
+				"type": "string"
+			},
+			"EnterTargetFolder": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().EnterTargetFolder",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().EnterTargetPath",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
