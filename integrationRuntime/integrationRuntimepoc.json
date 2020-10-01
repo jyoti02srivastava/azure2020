@@ -1,0 +1,6 @@
+{
+	"name": "integrationRuntimepoc",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
