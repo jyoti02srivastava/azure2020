@@ -107,7 +107,13 @@
 		"cglhlinkedservicenew_connectionString": {
 			"value": ""
 		},
+		"linkedservice_source_blob_connectionString": {
+			"value": ""
+		},
 		"loadblobtosql_blobnew_connectionString": {
+			"value": ""
+		},
+		"loadblobtotable_databricks_accessToken": {
 			"value": ""
 		},
 		"loadblobtotable_new_connectionString": {

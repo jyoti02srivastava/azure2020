@@ -143,9 +143,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservicenew'"
 		},
+		"linkedservice_source_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkedservice_source_blob'"
+		},
 		"loadblobtosql_blobnew_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'loadblobtosql_blobnew'"
+		},
+		"loadblobtotable_databricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'loadblobtotable_databricks'"
 		},
 		"loadblobtotable_new_connectionString": {
 			"type": "secureString",
@@ -13845,6 +13853,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/linkedservice_source_blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('linkedservice_source_blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/loadblobtosql_blobnew')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -13853,6 +13874,26 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('loadblobtosql_blobnew_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/loadblobtotable_databricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-3459637556007151.11.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('loadblobtotable_databricks_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "1",
+					"newClusterVersion": "6.4.x-scala2.11"
 				}
 			},
 			"dependsOn": []

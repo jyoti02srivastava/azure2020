@@ -143,9 +143,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservicenew'"
 		},
+		"linkedservice_source_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkedservice_source_blob'"
+		},
 		"loadblobtosql_blobnew_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'loadblobtosql_blobnew'"
+		},
+		"loadblobtotable_databricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'loadblobtotable_databricks'"
 		},
 		"loadblobtotable_new_connectionString": {
 			"type": "secureString",
@@ -332,8 +340,14 @@
 					"cglhlinkedservicenew_connectionString": {
 						"value": "[parameters('cglhlinkedservicenew_connectionString')]"
 					},
+					"linkedservice_source_blob_connectionString": {
+						"value": "[parameters('linkedservice_source_blob_connectionString')]"
+					},
 					"loadblobtosql_blobnew_connectionString": {
 						"value": "[parameters('loadblobtosql_blobnew_connectionString')]"
+					},
+					"loadblobtotable_databricks_accessToken": {
+						"value": "[parameters('loadblobtotable_databricks_accessToken')]"
 					},
 					"onpremtosql_connectionString": {
 						"value": "[parameters('onpremtosql_connectionString')]"

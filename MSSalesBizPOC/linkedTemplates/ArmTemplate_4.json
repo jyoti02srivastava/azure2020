@@ -13,6 +13,50 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_e7f')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureStorageLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "cglhcontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_gwe')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "az_sql",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "",
+					"table": "Azure Blob Storage file"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_i1h')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -659,262 +703,6 @@
 							"type": "string"
 						}
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_2lq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServercglh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "CustomerKey",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "GeographyKey",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "CustomerAlternateKey",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "Title",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "FirstName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "MiddleName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "AddressLine1",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "AddressLine2",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "Phone",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "DateFirstPurchase",
-						"type": "date",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "CommuteDistance",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "FrenchEducation",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "EnglishOccupation",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "SpanishOccupation",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "FrenchOccupation",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "HouseOwnerFlag",
-						"type": "nchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "NumberCarsOwned",
-						"type": "tinyint",
-						"precision": 3,
-						"scale": 0
-					},
-					{
-						"name": "EmailAddress",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "YearlyIncome",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "TotalChildren",
-						"type": "tinyint",
-						"precision": 3,
-						"scale": 0
-					},
-					{
-						"name": "NumberChildrenAtHome",
-						"type": "tinyint",
-						"precision": 3,
-						"scale": 0
-					},
-					{
-						"name": "EnglishEducation",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "SpanishEducation",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "LastName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "NameStyle",
-						"type": "bit",
-						"precision": 1,
-						"scale": 0
-					},
-					{
-						"name": "BirthDate",
-						"type": "date",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "MaritalStatus",
-						"type": "nchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "Suffix",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "Gender",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "DimCustomer"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_2ty')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServercglh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "SalesQuotaKey",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "EmployeeKey",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "CalendarYear",
-						"type": "smallint",
-						"precision": 5,
-						"scale": 0
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "tinyint",
-						"precision": 3,
-						"scale": 0
-					},
-					{
-						"name": "SalesAmountQuota",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Factsalesquotapost"
 				}
 			},
 			"dependsOn": []
