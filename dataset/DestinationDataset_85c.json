@@ -1,0 +1,21 @@
+{
+	"name": "DestinationDataset_85c",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "loadblobtosql_blobnew",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "fbisrc"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
