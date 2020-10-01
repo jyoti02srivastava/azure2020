@@ -1,0 +1,6 @@
+{
+	"name": "TutorialIntegrationRuntimepoc",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
