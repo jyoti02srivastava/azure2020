@@ -2,7 +2,7 @@
 	"name": "Dataset_ForLoadingParquetFromCGLHSRCtoGLHDB",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "cglhlinkedservice_Source_Blob",
+			"referenceName": "loadblobtosql_blobnew",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"folderPath": "2020/08/01/parquetToLoadToSQL",
-				"container": "cglhsrc"
+				"container": "fbisrc"
 			},
 			"compressionCodec": "snappy"
 		},
