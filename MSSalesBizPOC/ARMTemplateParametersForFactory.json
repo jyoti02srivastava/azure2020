@@ -107,6 +107,15 @@
 		"cglhlinkedservicenew_connectionString": {
 			"value": ""
 		},
+		"loadblobtosql_blobnew_connectionString": {
+			"value": ""
+		},
+		"loadblobtotable_new_connectionString": {
+			"value": ""
+		},
+		"loadblobtotable_new_password": {
+			"value": ""
+		},
 		"onpremtosql_connectionString": {
 			"value": ""
 		},
@@ -120,6 +129,9 @@
 			"value": "fareast\\v-prrahe"
 		},
 		"cglh_sqlserverpost_properties_typeProperties_userName": {
+			"value": "fareast\\v-prrahe"
+		},
+		"loadblobtotable_new_properties_typeProperties_userName": {
 			"value": "fareast\\v-prrahe"
 		}
 	}

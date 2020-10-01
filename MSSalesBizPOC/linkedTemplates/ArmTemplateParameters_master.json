@@ -5,8 +5,134 @@
 		"factoryName": {
 			"value": "MSSalesBizPOC"
 		},
+		"AZ_CGLHDB_LinkedService_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage_csvtosql_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage_pre_connectionString": {
+			"value": ""
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
+		"AzureSourceBlob_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_csvtosql_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_forBlobdump_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDumpDB_LS_connectionString": {
+			"value": ""
+		},
+		"AzureStorageLinkedService_connectionString": {
+			"value": ""
+		},
+		"SqlServercglh_connectionString": {
+			"value": ""
+		},
+		"SqlServercglh_password": {
+			"value": ""
+		},
+		"az_meta_csv_linkedService_connectionString": {
+			"value": ""
+		},
+		"az_sql_connectionString": {
+			"value": ""
+		},
+		"blob_pre_connectionString": {
+			"value": ""
+		},
+		"cglhADFtoDatabricks_accessToken": {
+			"value": ""
+		},
+		"cglhSourceLocation_connectionString": {
+			"value": ""
+		},
+		"cglhTargetLocation_connectionString": {
+			"value": ""
+		},
+		"cglh_adf_to_blob_linkedservice_connectionString": {
+			"value": ""
+		},
+		"cglh_azuresqldatabase_connectionString": {
+			"value": ""
+		},
+		"cglh_sqlserverpost_connectionString": {
+			"value": ""
+		},
+		"cglh_sqlserverpost_password": {
+			"value": ""
+		},
+		"cglh_src_adf_pipeline_linkedservice_connectionString": {
+			"value": ""
+		},
+		"cglh_trg_adf_pipeline_linkedservice_connectionString": {
+			"value": ""
+		},
+		"cglhlinkedservice_connectionString": {
+			"value": ""
+		},
+		"cglhlinkedservice_SourceBlob_connectionString": {
+			"value": ""
+		},
 		"cglhlinkedservice_Source_Blob_connectionString": {
 			"value": ""
+		},
+		"cglhlinkedservice_TargetBlob_connectionString": {
+			"value": ""
+		},
+		"cglhlinkedservice_Target_BLOB_connectionString": {
+			"value": ""
+		},
+		"cglhlinkedservice_json_accessToken": {
+			"value": ""
+		},
+		"cglhlinkedservice_json3_accessToken": {
+			"value": ""
+		},
+		"cglhlinkedservicenew_connectionString": {
+			"value": ""
+		},
+		"loadblobtosql_blobnew_connectionString": {
+			"value": ""
+		},
+		"loadblobtotable_new_connectionString": {
+			"value": ""
+		},
+		"loadblobtotable_new_password": {
+			"value": ""
+		},
+		"onpremtosql_connectionString": {
+			"value": ""
+		},
+		"prepostdatabricks_linkedservice_accessToken": {
+			"value": ""
+		},
+		"AzureSourceBlob_properties_typeProperties_url": {
+			"value": "https://cglhstorageaccount.dfs.core.windows.net"
+		},
+		"SqlServercglh_properties_typeProperties_userName": {
+			"value": "fareast\\v-prrahe"
+		},
+		"cglh_sqlserverpost_properties_typeProperties_userName": {
+			"value": "fareast\\v-prrahe"
+		},
+		"loadblobtotable_new_properties_typeProperties_userName": {
+			"value": "fareast\\v-prrahe"
 		},
 		"containerUri": {
 			"value": ""

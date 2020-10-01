@@ -7,9 +7,177 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "MSSalesBizPOC"
 		},
+		"AZ_CGLHDB_LinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AZ_CGLHDB_LinkedService'"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureBlobStorage2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+		},
+		"AzureBlobStorage_csvtosql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_csvtosql'"
+		},
+		"AzureBlobStorage_pre_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_pre'"
+		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
+		"AzureSourceBlob_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureSourceBlob'"
+		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
+		},
+		"AzureSqlDatabase_csvtosql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_csvtosql'"
+		},
+		"AzureSqlDatabase_forBlobdump_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_forBlobdump'"
+		},
+		"AzureSqlDumpDB_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDumpDB_LS'"
+		},
+		"AzureStorageLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
+		},
+		"SqlServercglh_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServercglh'"
+		},
+		"SqlServercglh_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServercglh'"
+		},
+		"az_meta_csv_linkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'az_meta_csv_linkedService'"
+		},
+		"az_sql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'az_sql'"
+		},
+		"blob_pre_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'blob_pre'"
+		},
+		"cglhADFtoDatabricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'cglhADFtoDatabricks'"
+		},
+		"cglhSourceLocation_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhSourceLocation'"
+		},
+		"cglhTargetLocation_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhTargetLocation'"
+		},
+		"cglh_adf_to_blob_linkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglh_adf_to_blob_linkedservice'"
+		},
+		"cglh_azuresqldatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglh_azuresqldatabase'"
+		},
+		"cglh_sqlserverpost_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglh_sqlserverpost'"
+		},
+		"cglh_sqlserverpost_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'cglh_sqlserverpost'"
+		},
+		"cglh_src_adf_pipeline_linkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglh_src_adf_pipeline_linkedservice'"
+		},
+		"cglh_trg_adf_pipeline_linkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglh_trg_adf_pipeline_linkedservice'"
+		},
+		"cglhlinkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservice'"
+		},
+		"cglhlinkedservice_SourceBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservice_SourceBlob'"
+		},
 		"cglhlinkedservice_Source_Blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservice_Source_Blob'"
+		},
+		"cglhlinkedservice_TargetBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservice_TargetBlob'"
+		},
+		"cglhlinkedservice_Target_BLOB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservice_Target_BLOB'"
+		},
+		"cglhlinkedservice_json_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'cglhlinkedservice_json'"
+		},
+		"cglhlinkedservice_json3_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'cglhlinkedservice_json3'"
+		},
+		"cglhlinkedservicenew_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservicenew'"
+		},
+		"loadblobtosql_blobnew_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'loadblobtosql_blobnew'"
+		},
+		"loadblobtotable_new_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'loadblobtotable_new'"
+		},
+		"loadblobtotable_new_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'loadblobtotable_new'"
+		},
+		"onpremtosql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'onpremtosql'"
+		},
+		"prepostdatabricks_linkedservice_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'prepostdatabricks_linkedservice'"
+		},
+		"AzureSourceBlob_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://cglhstorageaccount.dfs.core.windows.net"
+		},
+		"SqlServercglh_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "fareast\\v-prrahe"
+		},
+		"cglh_sqlserverpost_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "fareast\\v-prrahe"
+		},
+		"loadblobtotable_new_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "fareast\\v-prrahe"
 		},
 		"containerUri": {
 			"type": "string",
@@ -71,6 +239,15 @@
 					"AzureSqlDumpDB_LS_connectionString": {
 						"value": "[parameters('AzureSqlDumpDB_LS_connectionString')]"
 					},
+					"AzureStorageLinkedService_connectionString": {
+						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
+					},
+					"SqlServercglh_connectionString": {
+						"value": "[parameters('SqlServercglh_connectionString')]"
+					},
+					"SqlServercglh_password": {
+						"value": "[parameters('SqlServercglh_password')]"
+					},
 					"az_meta_csv_linkedService_connectionString": {
 						"value": "[parameters('az_meta_csv_linkedService_connectionString')]"
 					},
@@ -83,17 +260,11 @@
 					"cglhADFtoDatabricks_accessToken": {
 						"value": "[parameters('cglhADFtoDatabricks_accessToken')]"
 					},
-					"cglhSourceLocation_connectionString": {
-						"value": "[parameters('cglhSourceLocation_connectionString')]"
-					},
-					"cglhTargetLocation_connectionString": {
-						"value": "[parameters('cglhTargetLocation_connectionString')]"
-					},
-					"cglh_adf_to_blob_linkedservice_connectionString": {
-						"value": "[parameters('cglh_adf_to_blob_linkedservice_connectionString')]"
-					},
 					"AzureSourceBlob_properties_typeProperties_url": {
 						"value": "[parameters('AzureSourceBlob_properties_typeProperties_url')]"
+					},
+					"SqlServercglh_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServercglh_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -113,8 +284,23 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"cglhSourceLocation_connectionString": {
+						"value": "[parameters('cglhSourceLocation_connectionString')]"
+					},
+					"cglhTargetLocation_connectionString": {
+						"value": "[parameters('cglhTargetLocation_connectionString')]"
+					},
+					"cglh_adf_to_blob_linkedservice_connectionString": {
+						"value": "[parameters('cglh_adf_to_blob_linkedservice_connectionString')]"
+					},
 					"cglh_azuresqldatabase_connectionString": {
 						"value": "[parameters('cglh_azuresqldatabase_connectionString')]"
+					},
+					"cglh_sqlserverpost_connectionString": {
+						"value": "[parameters('cglh_sqlserverpost_connectionString')]"
+					},
+					"cglh_sqlserverpost_password": {
+						"value": "[parameters('cglh_sqlserverpost_password')]"
 					},
 					"cglh_src_adf_pipeline_linkedservice_connectionString": {
 						"value": "[parameters('cglh_src_adf_pipeline_linkedservice_connectionString')]"
@@ -146,11 +332,17 @@
 					"cglhlinkedservicenew_connectionString": {
 						"value": "[parameters('cglhlinkedservicenew_connectionString')]"
 					},
+					"loadblobtosql_blobnew_connectionString": {
+						"value": "[parameters('loadblobtosql_blobnew_connectionString')]"
+					},
 					"onpremtosql_connectionString": {
 						"value": "[parameters('onpremtosql_connectionString')]"
 					},
 					"prepostdatabricks_linkedservice_accessToken": {
 						"value": "[parameters('prepostdatabricks_linkedservice_accessToken')]"
+					},
+					"cglh_sqlserverpost_properties_typeProperties_userName": {
+						"value": "[parameters('cglh_sqlserverpost_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -211,27 +403,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"AzureStorageLinkedService_connectionString": {
-						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
-					},
-					"SqlServercglh_connectionString": {
-						"value": "[parameters('SqlServercglh_connectionString')]"
-					},
-					"SqlServercglh_password": {
-						"value": "[parameters('SqlServercglh_password')]"
-					},
-					"cglh_sqlserverpost_connectionString": {
-						"value": "[parameters('cglh_sqlserverpost_connectionString')]"
-					},
-					"cglh_sqlserverpost_password": {
-						"value": "[parameters('cglh_sqlserverpost_password')]"
-					},
-					"SqlServercglh_properties_typeProperties_userName": {
-						"value": "[parameters('SqlServercglh_properties_typeProperties_userName')]"
-					},
-					"cglh_sqlserverpost_properties_typeProperties_userName": {
-						"value": "[parameters('cglh_sqlserverpost_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -272,6 +443,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"loadblobtotable_new_connectionString": {
+						"value": "[parameters('loadblobtotable_new_connectionString')]"
+					},
+					"loadblobtotable_new_password": {
+						"value": "[parameters('loadblobtotable_new_password')]"
+					},
+					"loadblobtotable_new_properties_typeProperties_userName": {
+						"value": "[parameters('loadblobtotable_new_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -317,6 +497,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_7')]"
+			]
+		},
+		{
+			"name": "MSSalesBizPOC_ArmTemplate_9",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_9.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'MSSalesBizPOC_ArmTemplate_8')]"
 			]
 		}
 	]
