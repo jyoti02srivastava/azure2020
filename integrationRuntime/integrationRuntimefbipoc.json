@@ -1,6 +1,0 @@
-{
-	"name": "integrationRuntimefbipoc",
-	"properties": {
-		"type": "SelfHosted"
-	}
-}
