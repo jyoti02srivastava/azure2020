@@ -1,0 +1,17 @@
+{
+	"name": "loadblobtotable_new",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=Mssalesaz02;initial catalog=FBI_POC",
+			"userName": "fareast\\v-prrahe",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxMjMwZjUzMS04ZGQyLTQ5YWUtYmFkMS0wNmY4OTQxM2UyMDQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntimepoc",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
