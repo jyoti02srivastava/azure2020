@@ -1,0 +1,16 @@
+{
+	"name": "SourceDataset_85c",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "loadblobtotable_new",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "FBI_Configuration"
+		}
+	}
+}
