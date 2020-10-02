@@ -16,13 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select SourcePath,SourceFolder,SourceFileType,SQLTargetDatabase,SQLTargetUser,SQLTargetPassword,SQLTargetTable,ExcludeFiles,ColstoCopy from [cglhdatabase].[dbo].[CGConfiguration] \nwhere GroupName='CopyFiles_BLOBtoSQL' and ActiveFlag='y'",
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "select SourcePath,SourceFolder,SourceFileType,SQLTargetDatabase,SQLTargetUser,SQLTargetPassword,SQLTargetTable,ExcludeFiles,ColstoCopy from FBI_POC.[dbo].[FBI_Configuration] \nwhere GroupName='CopyFiles_BLOBtoSQL' and ActiveFlag='y'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "AzuretoCGLHDBConnection",
+						"referenceName": "azure_loadblobtotable",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -60,7 +60,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"notebookPath": "/Users/jyoti.srivastava@annik.com/rough",
+								"notebookPath": "/Users/v-prrahe@microsoft.com/LoadBlobtoSQL",
 								"baseParameters": {
 									"SourcePath": {
 										"value": "@item().SourcePath",
@@ -85,7 +85,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "cglhlinkedservice_json",
+								"referenceName": "loadblobtotable_databricks",
 								"type": "LinkedServiceReference"
 							}
 						},
