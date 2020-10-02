@@ -119,8 +119,7 @@
 									}
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"tableOption": "autoCreate"
+									"type": "SqlServerSink"
 								},
 								"enableStaging": false,
 								"translator": {
@@ -140,14 +139,8 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "AzureSqlDatabaseSinkDataset",
-									"type": "DatasetReference",
-									"parameters": {
-										"sinkTableName": {
-											"value": "@item().SQLTargetTable",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "azureblobtosql_source",
+									"type": "DatasetReference"
 								}
 							]
 						}
