@@ -22,7 +22,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "azure_loadblobtotable",
+						"referenceName": "azureblobtosql_source",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
