@@ -5,12 +5,20 @@
 			"referenceName": "loadblobtotable_new",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"sinkTableName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": ""
+			"table": {
+				"value": "@dataset().sinkTableName",
+				"type": "Expression"
+			}
 		}
 	}
 }
