@@ -5,11 +5,6 @@
 			"referenceName": "loadblobtotable_new",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"sinkTableName": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
