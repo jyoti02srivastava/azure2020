@@ -1,0 +1,21 @@
+{
+	"name": "Dataset_ForLoadingParquetFromblob_poc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "loadblobtosql_blobnew",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "2020/08/01/parquetToLoadToSQL",
+				"container": "fbisrc"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
