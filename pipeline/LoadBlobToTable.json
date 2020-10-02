@@ -134,7 +134,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Dataset_ForLoadingParquetFromCGLHSRCtoGLHDB",
+									"referenceName": "Dataset_ForLoadingParquetFromblob_poc",
 									"type": "DatasetReference"
 								}
 							],
