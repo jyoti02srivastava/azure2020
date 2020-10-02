@@ -22,11 +22,8 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "azureblobtosql_source",
-						"type": "DatasetReference",
-						"parameters": {
-							"sinkTableName": "@item().SQLTargetTable"
-						}
+						"referenceName": "azureblobtosql_source_new",
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
