@@ -1,0 +1,21 @@
+{
+	"name": "azureblobtosql_source_new",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "loadblobtotable_new",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sinkTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "FBI_configuration"
+		}
+	}
+}
