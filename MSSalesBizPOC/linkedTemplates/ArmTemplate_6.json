@@ -25,6 +25,68 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_tme')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServercglh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "SalesQuotaKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "EmployeeKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "DateKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "CalendarYear",
+						"type": "smallint",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "CalendarQuarter",
+						"type": "tinyint",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "SalesAmountQuota",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Factsalesquotapost"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/az_cglhsrc_path')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1553,233 +1615,6 @@
 				],
 				"annotations": [],
 				"lastPublishTime": "2020-08-23T18:29:23Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ForEveryCSVTypeExcludeFiles')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "GetAllCSVFilesthatNeedToBeCopied",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@pipeline().parameters.a1",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "If Condition1",
-									"type": "IfCondition",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@or(contains(pipeline().parameters.a2,item().name),not(endswith(item().name,'csv')))",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "Append variable1",
-												"type": "AppendVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "a3",
-													"value": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "GetAllCSVFilesthatNeedToBeCopied",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "ExcludeFileNames",
-							"value": {
-								"value": "@array(variables('a3'))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach2",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('ExcludeFileNames')",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "CopyFilteredFiles",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"wildcardFolderPath": {
-													"value": "@pipeline().parameters.SourceFolder",
-													"type": "Expression"
-												},
-												"wildcardFileName": {
-													"value": "@item()",
-													"type": "Expression"
-												},
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings",
-												"copyBehavior": "PreserveHierarchy"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ""
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "CGLH_SourceCopyDataWithExcludeFunction",
-											"type": "DatasetReference",
-											"parameters": {
-												"SourcePath": {
-													"value": "@pipeline().parameters.SourcePath",
-													"type": "Expression"
-												},
-												"SourceFolder": {
-													"value": "@pipeline().parameters.SourceFolder",
-													"type": "Expression"
-												},
-												"SourceFile": {
-													"value": "@item()",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "CGLH_TargetExcludeFunction",
-											"type": "DatasetReference",
-											"parameters": {
-												"TargetPath": {
-													"value": "@pipeline().parameters.TargetPath",
-													"type": "Expression"
-												},
-												"TargetFolder": {
-													"value": "@pipeline().parameters.TargetFolder",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"a1": {
-						"type": "array",
-						"defaultValue": []
-					},
-					"a2": {
-						"type": "array",
-						"defaultValue": []
-					},
-					"SourcePath": {
-						"type": "string",
-						"defaultValue": "NULL"
-					},
-					"SourceFolder": {
-						"type": "string",
-						"defaultValue": "NULL"
-					},
-					"TargetPath": {
-						"type": "string",
-						"defaultValue": "NULL"
-					},
-					"TargetFolder": {
-						"type": "string",
-						"defaultValue": "NULL"
-					}
-				},
-				"variables": {
-					"a3": {
-						"type": "Array"
-					},
-					"final": {
-						"type": "Array"
-					},
-					"ExcludeFileNames": {
-						"type": "Array"
-					}
-				},
-				"folder": {
-					"name": "Jyoti_Pipelines"
-				},
-				"annotations": [],
-				"lastPublishTime": "2020-08-19T06:16:04Z"
 			},
 			"dependsOn": []
 		}

@@ -304,7 +304,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "cglhlinkedservice_Source_Blob",
+					"referenceName": "loadblobtosql_blobnew",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -313,7 +313,30 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"folderPath": "2020/08/01/parquetToLoadToSQL",
-						"container": "cglhsrc"
+						"container": "fbisrc"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataset_ForLoadingParquetFromblob_poc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtosql_blobnew",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "2020/08/01/parquetToLoadToSQL",
+						"container": "fbisrc"
 					},
 					"compressionCodec": "snappy"
 				},
@@ -594,27 +617,6 @@
 						"container": "cglhtgt"
 					}
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_d1w')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "cglh_adf_to_blob_linkedservice",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "cglhtgt"
-					}
-				},
-				"schema": {}
 			},
 			"dependsOn": []
 		}

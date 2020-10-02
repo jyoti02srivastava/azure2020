@@ -13,6 +13,27 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_d1w')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "cglh_adf_to_blob_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "cglhtgt"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_e7f')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -656,53 +677,6 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "DimAccount"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_1vt')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage2",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "dbo.FactSalesQuota.json",
-						"container": "cglhcontainer"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"SalesQuotaKey": {
-							"type": "integer"
-						},
-						"EmployeeKey": {
-							"type": "integer"
-						},
-						"DateKey": {
-							"type": "integer"
-						},
-						"CalendarYear": {
-							"type": "integer"
-						},
-						"CalendarQuarter": {
-							"type": "integer"
-						},
-						"SalesAmountQuota": {
-							"type": "number"
-						},
-						"Date": {
-							"type": "string"
-						}
-					}
 				}
 			},
 			"dependsOn": []

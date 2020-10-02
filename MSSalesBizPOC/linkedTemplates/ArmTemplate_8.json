@@ -1498,6 +1498,52 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/azureblobtosql_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtotable_new",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"sinkTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().sinkTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azureblobtosql_source_new')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtotable_new",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "FBI_configuration"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CopyFromDifferentBlobWithExcludeFile_v2')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3644,6 +3690,183 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/LoadBlobToTable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetSqlDetail",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select SourcePath,SourceFolder,SourceFileType,SQLTargetDatabase,SQLTargetUser,SQLTargetPassword,SQLTargetTable,ExcludeFiles,ColstoCopy from FBI_POC.[dbo].[FBI_Configuration] \nwhere GroupName='CopyFiles_BLOBtoSQL' and ActiveFlag='y'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "azureblobtosql_source_new",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetSqlDetail",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetSqlDetail').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Notebook1",
+									"type": "DatabricksNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebookPath": "/Users/v-prrahe@microsoft.com/LoadBlobtoSQL",
+										"baseParameters": {
+											"SourcePath": {
+												"value": "@item().SourcePath",
+												"type": "Expression"
+											},
+											"SourceFolder": {
+												"value": "@item().SourceFolder",
+												"type": "Expression"
+											},
+											"SourceFileType": {
+												"value": "@item().SourceFileType",
+												"type": "Expression"
+											},
+											"ExcludeFileNames": {
+												"value": "@item().ExcludeFiles",
+												"type": "Expression"
+											},
+											"ColstoCopy": {
+												"value": "@item().ColstoCopy",
+												"type": "Expression"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "loadblobtotable_databricks",
+										"type": "LinkedServiceReference"
+									}
+								},
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Notebook1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ParquetSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": "2020/08/01/parquetToLoadToSQL",
+												"wildcardFileName": "*.parquet"
+											}
+										},
+										"sink": {
+											"type": "SqlServerSink",
+											"tableOption": "autoCreate"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Dataset_ForLoadingParquetFromblob_poc",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "azureblobtosql_source",
+											"type": "DatasetReference",
+											"parameters": {
+												"sinkTableName": {
+													"value": "@item().SQLTargetTable",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"variables": {
+					"ExcludeFileNames": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-08-30T16:41:22Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/azureblobtosql_source_new')]",
+				"[concat(variables('factoryId'), '/datasets/azureblobtosql_source')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LoadBlobToTable_withMetaOption')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3759,240 +3982,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2020-08-23T18:29:23Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/loadblobtotable_new')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_85c",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "dbo.FBI_Configuration"
-							},
-							{
-								"name": "Destination",
-								"value": "fbisrc//"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_85c",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_85c",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_85c')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipelineWithTwoExecutionPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(pipeline().parameters.SourceFileType,'*')",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "ExecutePipelineForCJP",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "ToCopyAllFilesExceptExcludedFilesForCJP",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"a1": {
-												"value": "@pipeline().parameters.a1",
-												"type": "Expression"
-											},
-											"a2": {
-												"value": "@pipeline().parameters.a2",
-												"type": "Expression"
-											},
-											"SourcePath": {
-												"value": "@pipeline().parameters.SourcePath",
-												"type": "Expression"
-											},
-											"SourceFolder": {
-												"value": "@pipeline().parameters.SourceFolder",
-												"type": "Expression"
-											},
-											"TargetPath": {
-												"value": "@pipeline().parameters.TargetPath",
-												"type": "Expression"
-											},
-											"TargetFolder": {
-												"value": "@pipeline().parameters.TargetFolder",
-												"type": "Expression"
-											},
-											"SourceFileType": {
-												"value": "@pipeline().parameters.SourceFileType",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "ExecutePipelineForStartFiles",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "ToCopyAllFilesExceptExcludedFiles",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"a1": {
-												"value": "@pipeline().parameters.a1",
-												"type": "Expression"
-											},
-											"a2": {
-												"value": "@pipeline().parameters.a2",
-												"type": "Expression"
-											},
-											"SourcePath": {
-												"value": "@pipeline().parameters.SourcePath",
-												"type": "Expression"
-											},
-											"SourceFolder": {
-												"value": "@pipeline().parameters.SourceFolder",
-												"type": "Expression"
-											},
-											"TargetPath": {
-												"value": "@pipeline().parameters.TargetPath",
-												"type": "Expression"
-											},
-											"TargetFolder": {
-												"value": "@pipeline().parameters.TargetFolder",
-												"type": "Expression"
-											},
-											"SourceFileType": {
-												"value": "@pipeline().parameters.SourceFileType",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"SourceFileType": {
-						"type": "string"
-					},
-					"a1": {
-						"type": "array"
-					},
-					"a2": {
-						"type": "array"
-					},
-					"SourcePath": {
-						"type": "string"
-					},
-					"SourceFolder": {
-						"type": "string"
-					},
-					"TargetPath": {
-						"type": "string"
-					},
-					"TargetFolder": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2020-08-24T17:27:40Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Trigger_gwe')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "CopyPipeline_toSql",
-						"type": "PipelineReference"
-					},
-					"parameters": {}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2020-08-17T12:15:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
 			},
 			"dependsOn": []
 		}

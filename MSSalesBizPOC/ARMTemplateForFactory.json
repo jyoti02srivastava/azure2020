@@ -5354,13 +5354,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select SourcePath,SourceFolder,SourceFileType,SQLTargetDatabase,SQLTargetUser,SQLTargetPassword,SQLTargetTable,ExcludeFiles,ColstoCopy from [cglhdatabase].[dbo].[CGConfiguration] \nwhere GroupName='CopyFiles_BLOBtoSQL' and ActiveFlag='y'",
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select SourcePath,SourceFolder,SourceFileType,SQLTargetDatabase,SQLTargetUser,SQLTargetPassword,SQLTargetTable,ExcludeFiles,ColstoCopy from FBI_POC.[dbo].[FBI_Configuration] \nwhere GroupName='CopyFiles_BLOBtoSQL' and ActiveFlag='y'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzuretoCGLHDBConnection",
+								"referenceName": "azureblobtosql_source_new",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -5399,7 +5399,7 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"notebookPath": "/Users/jyoti.srivastava@annik.com/rough",
+										"notebookPath": "/Users/v-prrahe@microsoft.com/LoadBlobtoSQL",
 										"baseParameters": {
 											"SourcePath": {
 												"value": "@item().SourcePath",
@@ -5424,7 +5424,7 @@
 										}
 									},
 									"linkedServiceName": {
-										"referenceName": "cglhlinkedservice_json",
+										"referenceName": "loadblobtotable_databricks",
 										"type": "LinkedServiceReference"
 									}
 								},
@@ -5458,7 +5458,7 @@
 											}
 										},
 										"sink": {
-											"type": "AzureSqlSink",
+											"type": "SqlServerSink",
 											"tableOption": "autoCreate"
 										},
 										"enableStaging": false,
@@ -5473,14 +5473,14 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "Dataset_ForLoadingParquetFromCGLHSRCtoGLHDB",
+											"referenceName": "Dataset_ForLoadingParquetFromblob_poc",
 											"type": "DatasetReference",
 											"parameters": {}
 										}
 									],
 									"outputs": [
 										{
-											"referenceName": "AzureSqlDatabaseSinkDataset",
+											"referenceName": "azureblobtosql_source",
 											"type": "DatasetReference",
 											"parameters": {
 												"sinkTableName": {
@@ -5507,10 +5507,10 @@
 				"lastPublishTime": "2020-08-30T16:41:22Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzuretoCGLHDBConnection')]",
-				"[concat(variables('factoryId'), '/linkedServices/cglhlinkedservice_json')]",
-				"[concat(variables('factoryId'), '/datasets/Dataset_ForLoadingParquetFromCGLHSRCtoGLHDB')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabaseSinkDataset')]"
+				"[concat(variables('factoryId'), '/datasets/azureblobtosql_source_new')]",
+				"[concat(variables('factoryId'), '/linkedServices/loadblobtotable_databricks')]",
+				"[concat(variables('factoryId'), '/datasets/Dataset_ForLoadingParquetFromblob_poc')]",
+				"[concat(variables('factoryId'), '/datasets/azureblobtosql_source')]"
 			]
 		},
 		{
@@ -10652,7 +10652,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "cglhlinkedservice_Source_Blob",
+					"referenceName": "loadblobtosql_blobnew",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -10661,14 +10661,39 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"folderPath": "2020/08/01/parquetToLoadToSQL",
-						"container": "cglhsrc"
+						"container": "fbisrc"
 					},
 					"compressionCodec": "snappy"
 				},
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/cglhlinkedservice_Source_Blob')]"
+				"[concat(variables('factoryId'), '/linkedServices/loadblobtosql_blobnew')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataset_ForLoadingParquetFromblob_poc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtosql_blobnew",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "2020/08/01/parquetToLoadToSQL",
+						"container": "fbisrc"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/loadblobtosql_blobnew')]"
 			]
 		},
 		{
@@ -13258,6 +13283,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/azureblobtosql_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtotable_new",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"sinkTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().sinkTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/loadblobtotable_new')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/cglhlinkedservice_SourceBlob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -13995,6 +14049,27 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azureblobtosql_source_new')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtotable_new",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "FBI_configuration"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/loadblobtotable_new')]"
+			]
 		}
 	]
 }
