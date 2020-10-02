@@ -141,7 +141,13 @@
 							"outputs": [
 								{
 									"referenceName": "azureblobtosql_source",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"sinkTableName": {
+											"value": "@item().SQLTargetTable",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
