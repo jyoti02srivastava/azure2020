@@ -2,7 +2,7 @@
 	"name": "CGLH_TargetExcludeFunction",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "cglhlinkedservice_Source_Blob",
+			"referenceName": "fbi_linkedservice_blob",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
