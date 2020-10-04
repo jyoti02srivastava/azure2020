@@ -313,7 +313,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"notebookPath": "/Users/jyoti.srivastava@annik.com/CopyBlobtoBlobWithComparision",
+								"notebookPath": "/Users/v-prrahe@microsoft.com/BlobtoBlobcomparison",
 								"baseParameters": {
 									"SourcePath": {
 										"value": "@item().SourcePath",
@@ -362,7 +362,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "cglhADFtoDatabricks",
+								"referenceName": "AzureDatabricks_blobtoblobcomparison",
 								"type": "LinkedServiceReference"
 							}
 						}
