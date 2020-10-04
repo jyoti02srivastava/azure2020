@@ -100,7 +100,9 @@
 									"type": "JsonSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": true
+										"recursive": true,
+										"wildcardFolderPath": "@pipeline().parameters.SourceFolder",
+										"wildcardFileName": " @item()"
 									},
 									"formatSettings": {
 										"type": "JsonReadSettings"
