@@ -97,22 +97,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "DelimitedTextSource",
+									"type": "JsonSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"wildcardFolderPath": {
-											"value": "@pipeline().parameters.SourceFolder",
-											"type": "Expression"
-										},
-										"wildcardFileName": {
-											"value": "@item()",
-											"type": "Expression"
-										},
-										"enablePartitionDiscovery": false
+										"recursive": true
 									},
 									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
+										"type": "JsonReadSettings"
 									}
 								},
 								"sink": {
@@ -128,34 +119,12 @@
 									}
 								},
 								"enableStaging": false,
-								"parallelCopies": 50,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+								"parallelCopies": 50
 							},
 							"inputs": [
 								{
-									"referenceName": "CGLH_SourceCopyDataWithExcludeFunction",
-									"type": "DatasetReference",
-									"parameters": {
-										"SourcePath": {
-											"value": "@pipeline().parameters.SourcePath",
-											"type": "Expression"
-										},
-										"SourceFolder": {
-											"value": "@pipeline().parameters.SourceFolder",
-											"type": "Expression"
-										},
-										"SourceFile": {
-											"value": "@item()",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "cglhlinkedservice_SourceBlob",
+									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
