@@ -2,7 +2,7 @@
 	"name": "cglhlinkedservice_SourceBlob",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "cglhlinkedservice_SourceBlob",
+			"referenceName": "fbilinkedservice",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "cglhcontainer"
+				"container": "fbisrc"
 			}
 		}
 	},
