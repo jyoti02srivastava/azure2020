@@ -128,9 +128,9 @@
 									"referenceName": "cglhlinkedservice_SourceBlob",
 									"type": "DatasetReference",
 									"parameters": {
-										"sourcepath": "@pipeline().parameters.SourcePath",
-										"sourcefolder": "@pipeline().parameters.SourceFolder",
-										"sourcefile": "@pipeline().parameters.SourceFile"
+										"SourcePath": "@pipeline().parameters.SourcePath",
+										"SourceFolder": "@pipeline().parameters.SourceFolder",
+										"SourceFile": "@pipeline().parameters.SourceFile"
 									}
 								}
 							],
