@@ -126,7 +126,12 @@
 							"inputs": [
 								{
 									"referenceName": "cglhlinkedservice_SourceBlob",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"sourcepath": "@pipeline().parameters.SourcePath",
+										"sourcefolder": "@pipeline().parameters.SourceFolder",
+										"sourcefile": "@pipeline().parameters.SourceFile"
+									}
 								}
 							],
 							"outputs": [
