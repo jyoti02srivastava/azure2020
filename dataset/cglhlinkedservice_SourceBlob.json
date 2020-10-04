@@ -2,15 +2,28 @@
 	"name": "cglhlinkedservice_SourceBlob",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "fbilinkedservice",
+			"referenceName": "Newlinkedserviceforexcludefiles",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sourcepath": {
+				"type": "string"
+			},
+			"sourcefolder": {
+				"type": "string"
+			},
+			"sourcefile": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "fbisrc"
+				"fileName": "@dataset().SourceFile",
+				"folderPath": "@dataset().SourceFolder",
+				"container": " @dataset().SourcePath"
 			}
 		}
 	},
