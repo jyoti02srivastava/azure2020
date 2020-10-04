@@ -23,7 +23,7 @@
 				"type": "AzureBlobStorageLocation",
 				"fileName": "@dataset().SourceFile",
 				"folderPath": "@dataset().SourceFolder",
-				"container": " @dataset().SourcePath"
+				"container": "@dataset().SourcePath"
 			}
 		}
 	},
