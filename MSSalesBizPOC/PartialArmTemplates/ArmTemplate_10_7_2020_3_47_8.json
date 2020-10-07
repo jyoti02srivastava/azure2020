@@ -1,0 +1,2116 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "MSSalesBizPOC"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyBlobtoBlobForMultipleExcludeFiles_new')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "IfConditionForMultipleExcludeFiles",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@not(empty(pipeline().parameters.ExcludeFileNames))",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "CopydataForeach",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": {
+													"value": "@pipeline().parameters.SourceFolder",
+													"type": "Expression"
+												},
+												"wildcardFileName": {
+													"value": "@pipeline().parameters.SourceFileType",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings",
+												"copyBehavior": "PreserveHierarchy"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ""
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "CGLHSourceCSVType",
+											"type": "DatasetReference",
+											"parameters": {
+												"SourcePath": {
+													"value": "@pipeline().parameters.SourcePath",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "CGLHTargetCSVType",
+											"type": "DatasetReference",
+											"parameters": {
+												"TargetPath": {
+													"value": "@pipeline().parameters.TargetPath",
+													"type": "Expression"
+												},
+												"TargetFolder": {
+													"value": "@pipeline().parameters.TargetFolder",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Get Metadata1ForAllFileType_CSV",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "GetMetadataOfBlobStorage",
+											"type": "DatasetReference",
+											"parameters": {
+												"SourcePath": {
+													"value": "@pipeline().parameters.SourcePath",
+													"type": "Expression"
+												},
+												"SourceFolder": {
+													"value": "@pipeline().parameters.SourceFolder",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"childItems"
+										],
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true
+										},
+										"formatSettings": {
+											"type": "DelimitedTextReadSettings"
+										}
+									}
+								},
+								{
+									"name": "ToCopyAllFilesExceptExcludedFiles",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "SplitExcludeFileWithCommas_CSV",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "pipelineWithTwoExecutionPipeline",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"SourceFileType": {
+												"value": "@pipeline().parameters.SourceFileType",
+												"type": "Expression"
+											},
+											"a1": {
+												"value": "@array(activity('Get Metadata1ForAllFileType_CSV').output.childItems)",
+												"type": "Expression"
+											},
+											"a2": {
+												"value": "@array(variables('SplitExcludeFilesIntoArray'))",
+												"type": "Expression"
+											},
+											"SourcePath": {
+												"value": "@pipeline().parameters.SourcePath",
+												"type": "Expression"
+											},
+											"SourceFolder": {
+												"value": "@pipeline().parameters.SourceFolder",
+												"type": "Expression"
+											},
+											"TargetPath": {
+												"value": "@pipeline().parameters.TargetPath",
+												"type": "Expression"
+											},
+											"TargetFolder": {
+												"value": "@pipeline().parameters.TargetFolder",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "SplitExcludeFileWithCommas_CSV",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Get Metadata1ForAllFileType_CSV",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "SplitExcludeFilesIntoArray",
+										"value": {
+											"value": "@split(pipeline().parameters.ExcludeFileNames,',')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"ExcludeFileNames": {
+						"type": "string"
+					},
+					"SourceFileType": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"SourcePath": {
+						"type": "string"
+					},
+					"TargetPath": {
+						"type": "string"
+					},
+					"TargetFolder": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"SplitExcludeFilesIntoArray": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-09-01T05:47:48Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CGLHSourceCSVType')]",
+				"[concat(variables('factoryId'), '/datasets/CGLHTargetCSVType')]",
+				"[concat(variables('factoryId'), '/datasets/GetMetadataOfBlobStorage')]",
+				"[concat(variables('factoryId'), '/pipelines/pipelineWithTwoExecutionPipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyBlobtoBlobForMultipleInclude_new')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetAllIncludeFilesthatNeedToBeCopied",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.a1",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "IfConditionToFilterFilestoCopy",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@not(contains(pipeline().parameters.a2,item().name))",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "GetListOfIncludeFiles",
+												"type": "AppendVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "a3",
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "SetvariableWithFinalIncludeFileNames",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "GetAllIncludeFilesthatNeedToBeCopied",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Final",
+							"value": {
+								"value": "@variables('a3')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEachTOCopyOnlySelectedIncludeFiles",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "SetvariableWithFinalIncludeFileNames",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('a3')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "CopyFilteredFiles",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": {
+													"value": "@pipeline().parameters.SourceFolder",
+													"type": "Expression"
+												},
+												"wildcardFileName": {
+													"value": "@item()",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings",
+												"copyBehavior": "PreserveHierarchy"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ""
+											}
+										},
+										"enableStaging": false,
+										"parallelCopies": 50,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "CGLH_SourceCopyDataWithExcludeFunction_new",
+											"type": "DatasetReference",
+											"parameters": {
+												"SourcePath": "@pipeline().parameters.SourcePath",
+												"SourceFolder": "@pipeline().parameters.SourceFolder",
+												"SourceFile": "@item()"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "CGLH_TargetExcludeFunction",
+											"type": "DatasetReference",
+											"parameters": {
+												"TargetPath": {
+													"value": "@pipeline().parameters.TargetPath",
+													"type": "Expression"
+												},
+												"TargetFolder": {
+													"value": "@pipeline().parameters.TargetFolder",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"a1": {
+						"type": "array",
+						"defaultValue": []
+					},
+					"a2": {
+						"type": "array",
+						"defaultValue": []
+					},
+					"SourcePath": {
+						"type": "string",
+						"defaultValue": "NULL"
+					},
+					"SourceFolder": {
+						"type": "string",
+						"defaultValue": "NULL"
+					},
+					"TargetPath": {
+						"type": "string",
+						"defaultValue": "NULL"
+					},
+					"TargetFolder": {
+						"type": "string",
+						"defaultValue": "NULL"
+					}
+				},
+				"variables": {
+					"a3": {
+						"type": "Array"
+					},
+					"Final": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-09-01T05:47:48Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CGLH_SourceCopyDataWithExcludeFunction_new')]",
+				"[concat(variables('factoryId'), '/datasets/CGLH_TargetExcludeFunction')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyBlobtoBlobWithComparision')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetSqlTableDetail",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select a.ParamName,a.SourcePath,a.SourceFolder,a.SourceFileType_New as SourceFileType,a.TargetPath,a.TargetFolder,a.TargetFileType,a.ExcludeFiles\n,a.ActiveFlag, a.Priority from (\nselect ParamName,SourcePath,SourceFolder,SourceFileType,TargetPath,TargetFolder,TargetFileType,ExcludeFiles, ActiveFlag,Priority, CASE \n\t\t\t\tWHEN (SourceFileType is NULL) THEN '*'\n\t\t\t\tELSE SourceFileType\n\t\t\t\tend as SourceFileType_New \n\t\t\t\tfrom [FBI_POC].[dbo].[FBI_Configuration] \nwhere GroupName='CopyFiles' and ActiveFlag = 'Y') a order by Priority",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "azureblobtosql_source_new",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For Each Record1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetSqlTableDetail",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetSqlTableDetail').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "If Condition2",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@contains(item().SourceFileType,'*')",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "IncludeFileNames",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "IncludeFileNames",
+													"value": {
+														"value": "@split(item().SourceFileType,',')",
+														"type": "Expression"
+													}
+												}
+											},
+											{
+												"name": "ExecutePipelineforGettingNameOfMultipleInclude",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "IncludeFileNames",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "GetMetadataOfSourceFolder",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "CopyBlobtoBlobForMultipleInclude_new",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"a1": {
+															"value": "@array(activity('GetMetadataOfSourceFolder').output.childItems)",
+															"type": "Expression"
+														},
+														"a2": {
+															"value": "@array(variables('IncludeFileNames'))",
+															"type": "Expression"
+														},
+														"SourcePath": {
+															"value": "@item().SourcePath",
+															"type": "Expression"
+														},
+														"SourceFolder": {
+															"value": "@item().SourceFolder",
+															"type": "Expression"
+														},
+														"TargetPath": {
+															"value": "@item().TargetPath",
+															"type": "Expression"
+														},
+														"TargetFolder": {
+															"value": "@item().TargetFolder",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "GetMetadataOfSourceFolder",
+												"type": "GetMetadata",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"dataset": {
+														"referenceName": "GetMetadataOfBlobStorage",
+														"type": "DatasetReference",
+														"parameters": {
+															"SourcePath": {
+																"value": "@item().SourcePath",
+																"type": "Expression"
+															},
+															"SourceFolder": {
+																"value": "@item().SourceFolder",
+																"type": "Expression"
+															}
+														}
+													},
+													"fieldList": [
+														"childItems"
+													],
+													"storeSettings": {
+														"type": "AzureBlobStorageReadSettings",
+														"recursive": true
+													},
+													"formatSettings": {
+														"type": "DelimitedTextReadSettings"
+													}
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "SetVariableForExclueFile",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "ExcludeFiles",
+													"value": {
+														"value": "@item().ExcludeFiles",
+														"type": "Expression"
+													}
+												}
+											},
+											{
+												"name": "Execute Pipeline4",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "SetVariableForExclueFile",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "SetSourceFileType",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles_new",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"ExcludeFileNames": {
+															"value": "@variables('ExcludeFiles')",
+															"type": "Expression"
+														},
+														"SourceFileType": {
+															"value": "@variables('SourceFileType')",
+															"type": "Expression"
+														},
+														"SourceFolder": {
+															"value": "@item().SourceFolder",
+															"type": "Expression"
+														},
+														"SourcePath": {
+															"value": "@item().SourcePath",
+															"type": "Expression"
+														},
+														"TargetPath": {
+															"value": "@item().TargetPath",
+															"type": "Expression"
+														},
+														"TargetFolder": {
+															"value": "@item().TargetFolder",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "SetSourceFileType",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "SourceFileType",
+													"value": {
+														"value": "@item().SourceFileType",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "GetSqlTableDetailForFileComparision",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "For Each Record1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select a.ParamName,a.SourcePath,a.SourceFolder,a.SourceFileType_New as SourceFileType,a.TargetPath,a.TargetFolder,a.TargetFileType,a.ResultSourcePath,a.ResultSourceFolder,a.ResultFileType\n,a.ActiveFlag, a.Priority,a.ColstoCompare,a.KeyColumns  from (\nselect ParamName,SourcePath,SourceFolder,SourceFileType,TargetPath,TargetFolder,TargetFileType,ResultSourcePath,ResultSourceFolder,ResultFileType, ActiveFlag,Priority,ColstoCompare,KeyColumns, CASE \n\t\t\t\tWHEN (SourceFileType is NULL) THEN '*'\n\t\t\t\tELSE SourceFileType\n\t\t\t\tend as SourceFileType_New \n\t\t\t\tfrom [FBI_POC].[dbo].[FBI_Configuration] \nwhere GroupName='CompareFiles' and ActiveFlag = 'Y') a order by Priority",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "azureblobtosql_source_new",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetSqlTableDetailForFileComparision",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetSqlTableDetailForFileComparision').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Compare_File_Parameterize_copy1",
+									"type": "DatabricksNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebookPath": "/Users/v-prrahe@microsoft.com/BlobtoBlobcomparison",
+										"baseParameters": {
+											"SourcePath": {
+												"value": "@item().SourcePath",
+												"type": "Expression"
+											},
+											"SourceFolder": {
+												"value": "@item().SourceFolder",
+												"type": "Expression"
+											},
+											"SourceFileType": {
+												"value": "@item().SourceFileType",
+												"type": "Expression"
+											},
+											"TargetPath": {
+												"value": "@item().TargetPath",
+												"type": "Expression"
+											},
+											"TargetFolder": {
+												"value": "@item().TargetFolder",
+												"type": "Expression"
+											},
+											"ResultSourcePath": {
+												"value": "@item().ResultSourcePath",
+												"type": "Expression"
+											},
+											"ResultSourceFolder": {
+												"value": "@item().ResultSourceFolder",
+												"type": "Expression"
+											},
+											"ResultSourceFileType": {
+												"value": "@item().ResultFileType",
+												"type": "Expression"
+											},
+											"ColstoCompare": {
+												"value": "@item().ColstoCompare",
+												"type": "Expression"
+											},
+											"KeyCols": {
+												"value": "@item().KeyColumns",
+												"type": "Expression"
+											},
+											"TargetFileType": {
+												"value": "@item().TargetFileType",
+												"type": "Expression"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "AzureDatabricks_blobtoblobcomparison",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"variables": {
+					"ExcludeFiles": {
+						"type": "String"
+					},
+					"CovertMetaDataToArray": {
+						"type": "Array"
+					},
+					"FileTypeFinal": {
+						"type": "Array"
+					},
+					"SplitExcludeFilesIntoArray": {
+						"type": "Array"
+					},
+					"LoopThroughExcludeFilesVariable": {
+						"type": "Array"
+					},
+					"IncludeFileNames": {
+						"type": "Array",
+						"defaultValue": []
+					},
+					"SourceFileType": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-09-09T16:22:47Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks_blobtoblobcomparison')]",
+				"[concat(variables('factoryId'), '/pipelines/CopyBlobtoBlobForMultipleInclude_new')]",
+				"[concat(variables('factoryId'), '/datasets/GetMetadataOfBlobStorage')]",
+				"[concat(variables('factoryId'), '/pipelines/CopyBlobtoBlobForMultipleExcludeFiles_new')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyFromDifferentBlobWithMultiple_Exclude_Include_File_poc')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetSqlTableDetail",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select a.ParamName,a.SourcePath,a.SourceFolder,a.SourceFileType_New as SourceFileType,a.TargetPath,a.TargetFolder,a.TargetFileType,a.ExcludeFiles\n,a.ActiveFlag, a.Priority from (\nselect ParamName,SourcePath,SourceFolder,SourceFileType,TargetPath,TargetFolder,TargetFileType,ExcludeFiles, ActiveFlag,Priority, CASE \n\t\t\t\tWHEN (SourceFileType is NULL) THEN '*'\n\t\t\t\tELSE SourceFileType\n\t\t\t\tend as SourceFileType_New \n\t\t\t\tfrom [FBI_POC].[dbo].[FBI_Configuration] \nwhere GroupName='CopyFiles' and ActiveFlag = 'Y') a order by Priority",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "azureblobtosql_source_new",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For Each Record1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetSqlTableDetail",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetSqlTableDetail').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "If Condition2",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@contains(item().SourceFileType,'*')",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "IncludeFileNames",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "IncludeFileNames",
+													"value": {
+														"value": "@split(item().SourceFileType,',')",
+														"type": "Expression"
+													}
+												}
+											},
+											{
+												"name": "ExecutePipelineforGettingNameOfMultipleInclude",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "IncludeFileNames",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "GetMetadataOfSourceFolder",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "CopyBlobtoBlobForMultipleInclude_new",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"a1": {
+															"value": "@array(activity('GetMetadataOfSourceFolder').output.childItems)",
+															"type": "Expression"
+														},
+														"a2": {
+															"value": "@array(variables('IncludeFileNames'))",
+															"type": "Expression"
+														},
+														"SourcePath": {
+															"value": "@item().SourcePath",
+															"type": "Expression"
+														},
+														"SourceFolder": {
+															"value": "@item().SourceFolder",
+															"type": "Expression"
+														},
+														"TargetPath": {
+															"value": "@item().TargetPath",
+															"type": "Expression"
+														},
+														"TargetFolder": {
+															"value": "@item().TargetFolder",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "GetMetadataOfSourceFolder",
+												"type": "GetMetadata",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"dataset": {
+														"referenceName": "GetMetadataOfBlobStorage",
+														"type": "DatasetReference",
+														"parameters": {
+															"SourcePath": {
+																"value": "@item().SourcePath",
+																"type": "Expression"
+															},
+															"SourceFolder": {
+																"value": "@item().SourceFolder",
+																"type": "Expression"
+															}
+														}
+													},
+													"fieldList": [
+														"childItems"
+													],
+													"storeSettings": {
+														"type": "AzureBlobStorageReadSettings",
+														"recursive": true
+													},
+													"formatSettings": {
+														"type": "DelimitedTextReadSettings"
+													}
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "SetVariableForExclueFile",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "ExcludeFiles",
+													"value": {
+														"value": "@item().ExcludeFiles",
+														"type": "Expression"
+													}
+												}
+											},
+											{
+												"name": "Execute Pipeline4",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "SetVariableForExclueFile",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "SetSourceFileType",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles_new",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"SourceFolder": {
+															"value": "@item().SourceFolder",
+															"type": "Expression"
+														},
+														"SourcePath": {
+															"value": "@item().SourcePath",
+															"type": "Expression"
+														},
+														"TargetPath": {
+															"value": "@item().TargetPath",
+															"type": "Expression"
+														},
+														"TargetFolder": {
+															"value": "@item().TargetFolder",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "SetSourceFileType",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "SourceFileType",
+													"value": {
+														"value": "@item().SourceFileType",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				],
+				"variables": {
+					"ExcludeFiles": {
+						"type": "String"
+					},
+					"CovertMetaDataToArray": {
+						"type": "Array"
+					},
+					"FileTypeFinal": {
+						"type": "Array"
+					},
+					"SplitExcludeFilesIntoArray": {
+						"type": "Array"
+					},
+					"LoopThroughExcludeFilesVariable": {
+						"type": "Array"
+					},
+					"IncludeFileNames": {
+						"type": "Array",
+						"defaultValue": []
+					},
+					"SourceFileType": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-09-01T10:35:59Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/CopyBlobtoBlobForMultipleInclude_new')]",
+				"[concat(variables('factoryId'), '/datasets/GetMetadataOfBlobStorage')]",
+				"[concat(variables('factoryId'), '/pipelines/CopyBlobtoBlobForMultipleExcludeFiles_new')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ToCopyAllFilesExceptExcludedFiles')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetAllCSVFilesthatNeedToBeCopied",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.a1",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "IfConditionToFilterFilestoCopy",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@contains(pipeline().parameters.a2,item().name)",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Append variable1",
+												"type": "AppendVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "a3",
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "SetvariableWithFinalFileNames",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "GetAllCSVFilesthatNeedToBeCopied",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Final",
+							"value": {
+								"value": "@variables('a3')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach2",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "SetvariableWithFinalFileNames",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('a3')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "CopyFilteredFiles",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": {
+													"value": "@pipeline().parameters.SourceFolder",
+													"type": "Expression"
+												},
+												"wildcardFileName": " @item()"
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings",
+												"copyBehavior": "PreserveHierarchy"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ""
+											}
+										},
+										"enableStaging": false,
+										"parallelCopies": 50
+									},
+									"inputs": [
+										{
+											"referenceName": "cglhlinkedservice_SourceBlob",
+											"type": "DatasetReference",
+											"parameters": {
+												"SourcePath": "@pipeline().parameters.SourcePath",
+												"SourceFolder": "@pipeline().parameters.SourceFolder",
+												"SourceFile": "@item()"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "CGLH_TargetExcludeFunction",
+											"type": "DatasetReference",
+											"parameters": {
+												"TargetPath": {
+													"value": "@pipeline().parameters.TargetPath",
+													"type": "Expression"
+												},
+												"TargetFolder": {
+													"value": "@pipeline().parameters.TargetFolder",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"a1": {
+						"type": "array"
+					},
+					"a2": {
+						"type": "array"
+					},
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"TargetPath": {
+						"type": "string"
+					},
+					"TargetFolder": {
+						"type": "string"
+					},
+					"SourceFileType": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"a3": {
+						"type": "Array"
+					},
+					"Final": {
+						"type": "Array"
+					},
+					"UpdateSourceTypeVariable": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-08-24T17:29:39Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/cglhlinkedservice_SourceBlob')]",
+				"[concat(variables('factoryId'), '/datasets/CGLH_TargetExcludeFunction')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ToCopyAllFilesExceptExcludedFilesForCJP_new')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetAllCSVFilesthatNeedToBeCopied",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "UpdateSourceTypeVariable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.a1",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "IfConditionToFilterFilestoCopy",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@or(contains(pipeline().parameters.a2,item().name),not(endswith(item().name,variables('UpdateSourceTypeVariable'))))",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Append variable1",
+												"type": "AppendVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "a3",
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "SetvariableWithFinalFileNames",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "GetAllCSVFilesthatNeedToBeCopied",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Final",
+							"value": {
+								"value": "@variables('a3')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach2",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "SetvariableWithFinalFileNames",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('a3')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "CopyFilteredFiles",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": {
+													"value": "@pipeline().parameters.SourceFolder",
+													"type": "Expression"
+												},
+												"wildcardFileName": {
+													"value": "@item()",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings",
+												"copyBehavior": "PreserveHierarchy"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ""
+											}
+										},
+										"enableStaging": false,
+										"parallelCopies": 50,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "CGLH_SourceCopyDataWithExcludeFunction_new",
+											"type": "DatasetReference",
+											"parameters": {
+												"SourcePath": "@pipeline().parameters.SourcePath",
+												"SourceFolder": "@pipeline().parameters.SourceFolder",
+												"SourceFile": "@item()"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "CGLH_TargetExcludeFunction",
+											"type": "DatasetReference",
+											"parameters": {
+												"TargetPath": {
+													"value": "@pipeline().parameters.TargetPath",
+													"type": "Expression"
+												},
+												"TargetFolder": {
+													"value": "@pipeline().parameters.TargetFolder",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "UpdateSourceTypeVariable",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "UpdateSourceTypeVariable",
+							"value": {
+								"value": "@split(pipeline().parameters.SourceFileType,'.')[1]",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"a1": {
+						"type": "array"
+					},
+					"a2": {
+						"type": "array"
+					},
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"TargetPath": {
+						"type": "string"
+					},
+					"TargetFolder": {
+						"type": "string"
+					},
+					"SourceFileType": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"a3": {
+						"type": "Array"
+					},
+					"Final": {
+						"type": "Array"
+					},
+					"UpdateSourceTypeVariable": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Jyoti_Pipelines"
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-08-24T17:21:33Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CGLH_SourceCopyDataWithExcludeFunction_new')]",
+				"[concat(variables('factoryId'), '/datasets/CGLH_TargetExcludeFunction')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelineWithTwoExecutionPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(pipeline().parameters.SourceFileType,'*')",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "ExecutePipelineForCJP",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "ToCopyAllFilesExceptExcludedFilesForCJP_new",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"a1": {
+												"value": "@pipeline().parameters.a1",
+												"type": "Expression"
+											},
+											"a2": {
+												"value": "@pipeline().parameters.a2",
+												"type": "Expression"
+											},
+											"SourcePath": {
+												"value": "@pipeline().parameters.SourcePath",
+												"type": "Expression"
+											},
+											"SourceFolder": {
+												"value": "@pipeline().parameters.SourceFolder",
+												"type": "Expression"
+											},
+											"TargetPath": {
+												"value": "@pipeline().parameters.TargetPath",
+												"type": "Expression"
+											},
+											"TargetFolder": {
+												"value": "@pipeline().parameters.TargetFolder",
+												"type": "Expression"
+											},
+											"SourceFileType": {
+												"value": "@pipeline().parameters.SourceFileType",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "ExecutePipelineForStartFiles",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "ToCopyAllFilesExceptExcludedFiles",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"a1": {
+												"value": "@pipeline().parameters.a1",
+												"type": "Expression"
+											},
+											"a2": {
+												"value": "@pipeline().parameters.a2",
+												"type": "Expression"
+											},
+											"SourcePath": {
+												"value": "@pipeline().parameters.SourcePath",
+												"type": "Expression"
+											},
+											"SourceFolder": {
+												"value": "@pipeline().parameters.SourceFolder",
+												"type": "Expression"
+											},
+											"TargetPath": {
+												"value": "@pipeline().parameters.TargetPath",
+												"type": "Expression"
+											},
+											"TargetFolder": {
+												"value": "@pipeline().parameters.TargetFolder",
+												"type": "Expression"
+											},
+											"SourceFileType": {
+												"value": "@pipeline().parameters.SourceFileType",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"SourceFileType": {
+						"type": "string"
+					},
+					"a1": {
+						"type": "array"
+					},
+					"a2": {
+						"type": "array"
+					},
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"TargetPath": {
+						"type": "string"
+					},
+					"TargetFolder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-08-24T17:27:40Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ToCopyAllFilesExceptExcludedFilesForCJP_new')]",
+				"[concat(variables('factoryId'), '/pipelines/ToCopyAllFilesExceptExcludedFiles')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CGLHSourceCSVType')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtosql_blobnew",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CGLHTargetCSVType')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkedservice_source_blob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TargetPath": {
+						"type": "string"
+					},
+					"TargetFolder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().TargetFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().TargetPath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CGLH_SourceCopyDataWithExcludeFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fbi_linkedservice_blob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"SourceFile": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceFile",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CGLH_SourceCopyDataWithExcludeFunction_new')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fbi_linkedservice_blob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"SourceFile": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceFile",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CGLH_TargetExcludeFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fbi_linkedservice_blob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TargetPath": {
+						"type": "string"
+					},
+					"TargetFolder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().TargetFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().TargetPath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GetMetadataOfBlobStorage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fbi_linkedservice_blob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceCopyDataWithExcludeFunction_new')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtosql_blobnew",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"SourceFile": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceFile",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cglhlinkedservice_SourceBlob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Newlinkedserviceforexcludefiles",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"SourceFile": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceFile",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_blobtoblobcomparison')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-3459637556007151.11.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"newClusterNodeType": "Standard_NC12",
+					"newClusterNumOfWorker": "1",
+					"newClusterVersion": "5.5.x-gpu-scala2.11"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

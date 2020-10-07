@@ -6,12 +6,94 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "MSSalesBizPOC"
+		},
+		"loadblobtosql_blobnew_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'loadblobtosql_blobnew'"
+		},
+		"loadblobtotable_databricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'loadblobtotable_databricks'"
+		},
+		"onpremtosql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'onpremtosql'"
+		},
+		"prepostdatabricks_linkedservice_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'prepostdatabricks_linkedservice'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/loadblobtosql_blobnew')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('loadblobtosql_blobnew_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/loadblobtotable_databricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-3459637556007151.11.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('loadblobtotable_databricks_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "1",
+					"newClusterVersion": "6.4.x-scala2.11"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/onpremtosql')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('onpremtosql_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/prepostdatabricks_linkedservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-3273739657996690.10.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('prepostdatabricks_linkedservice_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "2",
+					"newClusterVersion": "5.5.x-scala2.11"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntimepoc')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
@@ -256,7 +338,9 @@
 				"annotations": [],
 				"lastPublishTime": "2020-08-04T12:37:12Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/prepostdatabricks_linkedservice')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/cglhpipeline_CompareData_JSONtoJSON')]",
@@ -358,7 +442,9 @@
 				"annotations": [],
 				"lastPublishTime": "2020-07-29T18:02:17Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/prepostdatabricks_linkedservice')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Az_meta_csv')]",
@@ -648,150 +734,6 @@
 						},
 						"container": {
 							"value": "@dataset().Container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataDestinationStore1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your data destination store.  ",
-				"linkedServiceName": {
-					"referenceName": "cglh_adf_to_blob_linkedservice",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Container": {
-						"type": "string"
-					},
-					"Directory": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@dataset().Directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().Container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataSourceStore')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your data source store. ",
-				"linkedServiceName": {
-					"referenceName": "cglh_src_adf_pipeline_linkedservice",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Container": {
-						"type": "string"
-					},
-					"Directory": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@dataset().Directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().Container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinarySinkFileStore')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your destination data store.",
-				"linkedServiceName": {
-					"referenceName": "cglhlinkedservice_TargetBlob",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinarySinkFileStore1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your destination data store.",
-				"linkedServiceName": {
-					"referenceName": "cglhlinkedservice_TargetBlob",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
 							"type": "Expression"
 						}
 					}

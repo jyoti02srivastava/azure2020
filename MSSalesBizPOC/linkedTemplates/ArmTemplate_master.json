@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
 		},
+		"AzureDatabricks_blobtoblobcomparison_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_blobtoblobcomparison'"
+		},
 		"AzureSourceBlob_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureSourceBlob'"
@@ -54,6 +58,10 @@
 		"AzureStorageLinkedService_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
+		},
+		"Newlinkedserviceforexcludefiles_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Newlinkedserviceforexcludefiles'"
 		},
 		"SqlServercglh_connectionString": {
 			"type": "secureString",
@@ -142,6 +150,14 @@
 		"cglhlinkedservicenew_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'cglhlinkedservicenew'"
+		},
+		"fbi_linkedservice_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'fbi_linkedservice_blob'"
+		},
+		"fbilinkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'fbilinkedservice'"
 		},
 		"linkedservice_source_blob_connectionString": {
 			"type": "secureString",
@@ -232,6 +248,9 @@
 					"AzureDatabricks1_accessToken": {
 						"value": "[parameters('AzureDatabricks1_accessToken')]"
 					},
+					"AzureDatabricks_blobtoblobcomparison_accessToken": {
+						"value": "[parameters('AzureDatabricks_blobtoblobcomparison_accessToken')]"
+					},
 					"AzureSourceBlob_accountKey": {
 						"value": "[parameters('AzureSourceBlob_accountKey')]"
 					},
@@ -250,6 +269,9 @@
 					"AzureStorageLinkedService_connectionString": {
 						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
 					},
+					"Newlinkedserviceforexcludefiles_connectionString": {
+						"value": "[parameters('Newlinkedserviceforexcludefiles_connectionString')]"
+					},
 					"SqlServercglh_connectionString": {
 						"value": "[parameters('SqlServercglh_connectionString')]"
 					},
@@ -261,12 +283,6 @@
 					},
 					"az_sql_connectionString": {
 						"value": "[parameters('az_sql_connectionString')]"
-					},
-					"blob_pre_connectionString": {
-						"value": "[parameters('blob_pre_connectionString')]"
-					},
-					"cglhADFtoDatabricks_accessToken": {
-						"value": "[parameters('cglhADFtoDatabricks_accessToken')]"
 					},
 					"AzureSourceBlob_properties_typeProperties_url": {
 						"value": "[parameters('AzureSourceBlob_properties_typeProperties_url')]"
@@ -291,6 +307,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"blob_pre_connectionString": {
+						"value": "[parameters('blob_pre_connectionString')]"
+					},
+					"cglhADFtoDatabricks_accessToken": {
+						"value": "[parameters('cglhADFtoDatabricks_accessToken')]"
 					},
 					"cglhSourceLocation_connectionString": {
 						"value": "[parameters('cglhSourceLocation_connectionString')]"
@@ -340,20 +362,14 @@
 					"cglhlinkedservicenew_connectionString": {
 						"value": "[parameters('cglhlinkedservicenew_connectionString')]"
 					},
+					"fbi_linkedservice_blob_connectionString": {
+						"value": "[parameters('fbi_linkedservice_blob_connectionString')]"
+					},
+					"fbilinkedservice_connectionString": {
+						"value": "[parameters('fbilinkedservice_connectionString')]"
+					},
 					"linkedservice_source_blob_connectionString": {
 						"value": "[parameters('linkedservice_source_blob_connectionString')]"
-					},
-					"loadblobtosql_blobnew_connectionString": {
-						"value": "[parameters('loadblobtosql_blobnew_connectionString')]"
-					},
-					"loadblobtotable_databricks_accessToken": {
-						"value": "[parameters('loadblobtotable_databricks_accessToken')]"
-					},
-					"onpremtosql_connectionString": {
-						"value": "[parameters('onpremtosql_connectionString')]"
-					},
-					"prepostdatabricks_linkedservice_accessToken": {
-						"value": "[parameters('prepostdatabricks_linkedservice_accessToken')]"
 					},
 					"cglh_sqlserverpost_properties_typeProperties_userName": {
 						"value": "[parameters('cglh_sqlserverpost_properties_typeProperties_userName')]"
@@ -377,6 +393,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"loadblobtosql_blobnew_connectionString": {
+						"value": "[parameters('loadblobtosql_blobnew_connectionString')]"
+					},
+					"loadblobtotable_databricks_accessToken": {
+						"value": "[parameters('loadblobtotable_databricks_accessToken')]"
+					},
+					"onpremtosql_connectionString": {
+						"value": "[parameters('onpremtosql_connectionString')]"
+					},
+					"prepostdatabricks_linkedservice_accessToken": {
+						"value": "[parameters('prepostdatabricks_linkedservice_accessToken')]"
 					}
 				}
 			},

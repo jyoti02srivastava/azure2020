@@ -13,6 +13,352 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/GetMetadataOfBlobStorage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fbi_linkedservice_blob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "cglhlinkedservice_Source_Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "2020",
+						"container": "cglhcontainer"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"$schema": {
+							"type": "string"
+						},
+						"contentVersion": {
+							"type": "string"
+						},
+						"parameters": {
+							"type": "object",
+							"properties": {
+								"servers_cgpocdbserverdbrscala_name": {
+									"type": "object",
+									"properties": {
+										"defaultValue": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"variables": {
+							"type": "object"
+						},
+						"resources": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"apiVersion": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string"
+									},
+									"location": {
+										"type": "string"
+									},
+									"sku": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"tier": {
+												"type": "string"
+											},
+											"capacity": {
+												"type": "integer"
+											}
+										}
+									},
+									"kind": {
+										"type": "string"
+									},
+									"properties": {
+										"type": "object",
+										"properties": {
+											"collation": {
+												"type": "string"
+											},
+											"maxSizeBytes": {
+												"type": "integer"
+											},
+											"catalogCollation": {
+												"type": "string"
+											},
+											"readScale": {
+												"type": "string"
+											},
+											"readReplicaCount": {
+												"type": "integer"
+											},
+											"storageAccountType": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParquetDataSetForCGLHSRCSource')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "cglhlinkedservice_Source_Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "2020/ParquetToLoadInSQLTable_v1",
+						"container": "cglhsrc"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceCopyDataWithExcludeFunction_new')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "loadblobtosql_blobnew",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourcePath": {
+						"type": "string"
+					},
+					"SourceFolder": {
+						"type": "string"
+					},
+					"SourceFile": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceFile",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().SourceFolder",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().SourcePath",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Connection to your source data store.",
+				"linkedServiceName": {
+					"referenceName": "AzureSourceBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string"
+					},
+					"SourceContainer": {
+						"type": "string"
+					},
+					"SourceDirectory": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().SourceDirectory",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().SourceContainer",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_1v9')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServercglh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "AccountKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "ParentAccountKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "AccountCodeAlternateKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "ParentAccountCodeAlternateKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "AccountDescription",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "AccountType",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Operator",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "CustomMembers",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "ValueType",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "CustomMemberOptions",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "DimAccount"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_1vt')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -889,242 +1235,6 @@
 						"type": "tinyint",
 						"precision": 3,
 						"scale": 0
-					},
-					{
-						"name": "SalesAmountQuota",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "FactSalesQuota"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_omk')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServercglh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "SalesQuotaKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "EmployeeKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarYear",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "SalesAmountQuota",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "FactSalesQuota"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_oxk')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServercglh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Factsalesquotapost"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_p2c')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage_csvtosql",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "FL_insurance_sample.csv",
-						"container": "cglhcontainer"
-					},
-					"columnDelimiter": ",",
-					"rowDelimiter": "\r",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_py1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "cglh_sqlserverpost",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "SalesQuotaKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "EmployeeKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarYear",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "SalesAmountQuota",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Factsalesquotapost"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_q1d')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServercglh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "FactSalesQuota"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_ta5')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServercglh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "SalesQuotaKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "EmployeeKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarYear",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "tinyint",
-						"precision": 3
 					},
 					{
 						"name": "SalesAmountQuota",

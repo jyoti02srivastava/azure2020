@@ -23,6 +23,9 @@
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
+		"AzureDatabricks_blobtoblobcomparison_accessToken": {
+			"value": ""
+		},
 		"AzureSourceBlob_accountKey": {
 			"value": ""
 		},
@@ -39,6 +42,9 @@
 			"value": ""
 		},
 		"AzureStorageLinkedService_connectionString": {
+			"value": ""
+		},
+		"Newlinkedserviceforexcludefiles_connectionString": {
 			"value": ""
 		},
 		"SqlServercglh_connectionString": {
@@ -105,6 +111,12 @@
 			"value": ""
 		},
 		"cglhlinkedservicenew_connectionString": {
+			"value": ""
+		},
+		"fbi_linkedservice_blob_connectionString": {
+			"value": ""
+		},
+		"fbilinkedservice_connectionString": {
 			"value": ""
 		},
 		"linkedservice_source_blob_connectionString": {
