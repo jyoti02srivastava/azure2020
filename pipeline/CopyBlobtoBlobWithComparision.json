@@ -197,7 +197,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"pipeline": {
-												"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles",
+												"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles_new",
 												"type": "PipelineReference"
 											},
 											"waitOnCompletion": true,
