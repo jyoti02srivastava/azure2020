@@ -140,7 +140,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "SourceCopyDataWithExcludeFunction_new",
+									"referenceName": "CGLH_SourceCopyDataWithExcludeFunction_new",
 									"type": "DatasetReference",
 									"parameters": {
 										"SourcePath": "@pipeline().parameters.SourcePath",
