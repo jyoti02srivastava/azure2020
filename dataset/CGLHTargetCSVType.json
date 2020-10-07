@@ -2,7 +2,7 @@
 	"name": "CGLHTargetCSVType",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "cglhlinkedservice_Source_Blob",
+			"referenceName": "linkedservice_source_blob",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
