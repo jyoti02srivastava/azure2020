@@ -2,7 +2,7 @@
 	"name": "SourceCopyDataWithExcludeFunction_new",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "fbi_linkedservice_blob",
+			"referenceName": "loadblobtosql_blobnew",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
