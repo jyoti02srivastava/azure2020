@@ -91,7 +91,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"pipeline": {
-												"referenceName": "CopyBlobtoBlobForMultipleInclude",
+												"referenceName": "CopyBlobtoBlobForMultipleInclude_new",
 												"type": "PipelineReference"
 											},
 											"waitOnCompletion": true,
