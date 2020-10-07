@@ -1,0 +1,44 @@
+{
+	"name": "SourceCopyDataWithExcludeFunction_new",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "fbi_linkedservice_blob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SourcePath": {
+				"type": "string"
+			},
+			"SourceFolder": {
+				"type": "string"
+			},
+			"SourceFile": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().SourceFile",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().SourceFolder",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().SourcePath",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
