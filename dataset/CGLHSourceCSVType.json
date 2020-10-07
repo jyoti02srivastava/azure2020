@@ -2,7 +2,7 @@
 	"name": "CGLHSourceCSVType",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "cglhlinkedservice_Source_Blob",
+			"referenceName": "loadblobtosql_blobnew",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
