@@ -140,21 +140,12 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "CGLH_SourceCopyDataWithExcludeFunction",
+									"referenceName": "SourceCopyDataWithExcludeFunction_new",
 									"type": "DatasetReference",
 									"parameters": {
-										"SourcePath": {
-											"value": "@pipeline().parameters.SourcePath",
-											"type": "Expression"
-										},
-										"SourceFolder": {
-											"value": "@pipeline().parameters.SourceFolder",
-											"type": "Expression"
-										},
-										"SourceFile": {
-											"value": "@item()",
-											"type": "Expression"
-										}
+										"SourcePath": "@pipeline().parameters.SourcePath",
+										"SourceFolder": "@pipeline().parameters.SourceFolder",
+										"SourceFile": "@item()"
 									}
 								}
 							],
