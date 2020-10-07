@@ -197,25 +197,17 @@
 										"userProperties": [],
 										"typeProperties": {
 											"pipeline": {
-												"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles",
+												"referenceName": "CopyBlobtoBlobForMultipleInclude_new",
 												"type": "PipelineReference"
 											},
 											"waitOnCompletion": true,
 											"parameters": {
-												"ExcludeFileNames": {
-													"value": "@variables('ExcludeFiles')",
-													"type": "Expression"
-												},
-												"SourceFileType": {
-													"value": "@variables('SourceFileType')",
+												"SourcePath": {
+													"value": "@item().SourcePath",
 													"type": "Expression"
 												},
 												"SourceFolder": {
 													"value": "@item().SourceFolder",
-													"type": "Expression"
-												},
-												"SourcePath": {
-													"value": "@item().SourcePath",
 													"type": "Expression"
 												},
 												"TargetPath": {
