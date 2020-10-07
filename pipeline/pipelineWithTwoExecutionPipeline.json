@@ -20,7 +20,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "ToCopyAllFilesExceptExcludedFilesForCJP",
+									"referenceName": "ToCopyAllFilesExceptExcludedFilesForCJP_new",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
