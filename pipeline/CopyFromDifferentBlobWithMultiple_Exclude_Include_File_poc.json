@@ -197,17 +197,17 @@
 										"userProperties": [],
 										"typeProperties": {
 											"pipeline": {
-												"referenceName": "CopyBlobtoBlobForMultipleInclude_new",
+												"referenceName": "CopyBlobtoBlobForMultipleExcludeFiles",
 												"type": "PipelineReference"
 											},
 											"waitOnCompletion": true,
 											"parameters": {
-												"SourcePath": {
-													"value": "@item().SourcePath",
-													"type": "Expression"
-												},
 												"SourceFolder": {
 													"value": "@item().SourceFolder",
+													"type": "Expression"
+												},
+												"SourcePath": {
+													"value": "@item().SourcePath",
 													"type": "Expression"
 												},
 												"TargetPath": {
